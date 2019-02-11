@@ -90,8 +90,8 @@
 	// again scaleOrdinal
 	var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-	//d3.csv('iris.data.csv', function(error, data){
-	d3.csv('subset.csv', function(error, data){
+
+	d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/subset.csv', function(error, data){
 		data.forEach(function(d){
 			 //d.SepalLength = +d.SepalLength;
 			 //d.SepalWidth = +d.SepalWidth;
