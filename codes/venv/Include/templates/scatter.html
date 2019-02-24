@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<div id="graphDiv" style="width:800px;height:500px;"></div>
+
+<script>
+Plotly.d3.csv('https://raw.githubusercontent.com/bcdunbar/datasets/master/iris.csv', function(err, rows){
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var data = [{
+  type: 'scatter',
+  x: unpack(rows, 'species_id'),
+  y: unpack(rows, 'sepal_width'),
+  mode: 'markers',
+  transforms: [{
+    type: 'groupby',
+    groups: unpack(rows, 'species_id'),
+    styles: [
+      {target: '1', value: {marker: {color: 'blue'}}},
+      {target: '2', value: {marker: {color: 'red'}}},
+      {target: '3', value: {marker: {color: 'black'}}}
+    ]
+  }]
+}]
+Plotly.plot('graphDiv', data)
+
+});
+
+
+
+
+
+</script>
+</body>
+</html>
