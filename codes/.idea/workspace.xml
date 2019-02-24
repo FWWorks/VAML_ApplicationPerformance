@@ -2,16 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d62e4183-bfd9-442b-a705-a06f1bb6173d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/analysis/pca/projection.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/templates/iris.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/templates/iris.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/templates/plotlytest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/templates/scatter.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/venv/Include/templates/test2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Include/templates/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/templates/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/pip-selfcheck.json" beforeDir="false" afterPath="$PROJECT_DIR$/venv/pip-selfcheck.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/venv/Include/templates/link.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/venv/Include/templates/linkedtest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/templates/parallel.html" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/templates/parallel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/templates/plotlytest.html" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/templates/plotlytest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/templates/scatter.html" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/templates/scatter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Include/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Include/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/ensemble/tests/test_voting_classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/ensemble/tests/test_voting_classifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/manifold/spectral_embedding_.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/manifold/spectral_embedding_.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/manifold/t_sne.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/manifold/t_sne.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/neighbors/tests/test_neighbors.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/neighbors/tests/test_neighbors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/semi_supervised/label_propagation.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/semi_supervised/label_propagation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/semi_supervised/tests/test_label_propagation.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Lib/site-packages/sklearn/semi_supervised/tests/test_label_propagation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,28 +39,28 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="csv" value="7" />
-          <entry key="html" value="9" />
-          <entry key="py" value="7" />
+          <entry key="csv" value="8" />
+          <entry key="html" value="15" />
+          <entry key="py" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="9" />
-          <entry key="PLAIN_TEXT" value="7" />
-          <entry key="Python" value="7" />
+          <entry key="HTML" value="15" />
+          <entry key="PLAIN_TEXT" value="8" />
+          <entry key="Python" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="121" />
-          <entry key="py" value="1018" />
+          <entry key="html" value="775" />
+          <entry key="py" value="1252" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="121" />
-          <entry key="Python" value="1018" />
+          <entry key="HTML" value="775" />
+          <entry key="Python" value="1252" />
         </counts>
       </usages-collector>
     </session>
@@ -63,10 +68,22 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/Include/templates/scatter.html">
+        <entry file="file://$PROJECT_DIR$/venv/Include/templates/link.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="627">
-              <caret line="33" column="29" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
+            <state relative-caret-position="304">
+              <caret line="28" column="18" lean-forward="true" selection-end-line="104" selection-end-column="7" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/venv/Include/templates/linkedtest.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="20" column="13" lean-forward="true" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -75,34 +92,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py">
+        <entry file="file://$PROJECT_DIR$/venv/Include/templates/plotlytest.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="36" column="26" lean-forward="true" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
+            <state relative-caret-position="209">
+              <caret line="23" column="37" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="37" />
               <folding>
-                <element signature="e#0#37#0" expanded="true" />
-                <marker date="1550981563358" expanded="true" signature="211:212" ph="..." />
-                <marker date="1550981563358" expanded="true" signature="229:230" ph="..." />
-                <marker date="1550981563358" expanded="true" signature="508:1031" ph="..." />
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/projection.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="12" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -112,8 +108,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -129,16 +125,21 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/venv/Include/test.py" />
         <option value="$PROJECT_DIR$/venv/Include/scatter.html" />
         <option value="$PROJECT_DIR$/venv/Include/test.html" />
         <option value="$PROJECT_DIR$/venv/Include/templates/test.html" />
         <option value="$PROJECT_DIR$/venv/Include/templates/iris.html" />
         <option value="$PROJECT_DIR$/venv/Include/templates/test2.html" />
-        <option value="$PROJECT_DIR$/venv/Include/templates/plotlytest.html" />
-        <option value="$PROJECT_DIR$/venv/Include/templates/scatter.html" />
         <option value="$PROJECT_DIR$/venv/Include/analysis/pca/t.py" />
+        <option value="$PROJECT_DIR$/venv/Include/analysis/knn/knn.py" />
+        <option value="$PROJECT_DIR$/venv/Include/analysis/kmeans/kmeans.py" />
+        <option value="$PROJECT_DIR$/venv/Include/templates/scatter.html" />
         <option value="$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py" />
+        <option value="$PROJECT_DIR$/venv/Include/test.py" />
+        <option value="$PROJECT_DIR$/venv/Include/templates/plotlytest.html" />
+        <option value="$PROJECT_DIR$/venv/Include/templates/parallel.html" />
+        <option value="$PROJECT_DIR$/venv/Include/templates/link.html" />
+        <option value="$PROJECT_DIR$/venv/Include/templates/linkedtest.html" />
       </list>
     </option>
   </component>
@@ -185,6 +186,14 @@
               <item name="venv" type="462c0819:PsiDirectoryNode" />
               <item name="Include" type="462c0819:PsiDirectoryNode" />
               <item name="analysis" type="462c0819:PsiDirectoryNode" />
+              <item name="kmeans" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="codes" type="b2602c69:ProjectViewProjectNode" />
+              <item name="codes" type="462c0819:PsiDirectoryNode" />
+              <item name="venv" type="462c0819:PsiDirectoryNode" />
+              <item name="Include" type="462c0819:PsiDirectoryNode" />
+              <item name="analysis" type="462c0819:PsiDirectoryNode" />
               <item name="pca" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -212,11 +221,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../mockup2vis/codes/mockup2vis" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Git\VAML_ApplicationPerformance\codes\venv\Include\analysis\knn" />
       <recent name="E:\Git\VAML_ApplicationPerformance\codes\venv\Include\analysis\pca" />
       <recent name="E:\Git\VAML_ApplicationPerformance\codes\venv\Include\templates" />
     </key>
@@ -233,7 +243,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.PCA">
+  <component name="RunManager" selected="Python.test">
     <configuration name="PCA" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="codes" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -247,6 +257,48 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="kmeans" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="codes" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/venv/Include/analysis/kmeans" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/venv/Include/analysis/kmeans/kmeans.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="knn" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="codes" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/venv/Include/analysis/knn" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/venv/Include/analysis/knn/knn.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -301,12 +353,16 @@
       <item itemvalue="Python.test" />
       <item itemvalue="Python.PCA" />
       <item itemvalue="Python.t" />
+      <item itemvalue="Python.knn" />
+      <item itemvalue="Python.kmeans" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.kmeans" />
+        <item itemvalue="Python.knn" />
         <item itemvalue="Python.PCA" />
         <item itemvalue="Python.t" />
-        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -330,8 +386,8 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.43842363" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32840723" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32512316" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -349,13 +405,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/venv/Include/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/templates/subset.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -403,16 +452,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/templates/plotlytest.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-49">
-          <caret line="30" column="39" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="39" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/subset.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -436,40 +475,110 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="12" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/knn/knn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/kmeans/projection.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/projection.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="27" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/kmeans/kmeans.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/PCA.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="36" column="26" lean-forward="true" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
+        <state relative-caret-position="-456">
+          <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <marker date="1550981563358" expanded="true" signature="211:212" ph="..." />
-            <marker date="1550981563358" expanded="true" signature="229:230" ph="..." />
-            <marker date="1550981563358" expanded="true" signature="508:1031" ph="..." />
+            <marker date="1550990975549" expanded="true" signature="258:259" ph="..." />
+            <marker date="1550990975549" expanded="true" signature="276:277" ph="..." />
+            <marker date="1550990975549" expanded="true" signature="555:1078" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="5" column="23" lean-forward="true" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/templates/scatter.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="33" column="29" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
+        <state relative-caret-position="171">
+          <caret line="39" column="63" lean-forward="true" selection-start-line="27" selection-start-column="4" selection-end-line="39" selection-end-column="63" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/projection.csv">
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/parallel.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
+        <state relative-caret-position="1691">
+          <caret line="89" column="21" selection-start-line="89" selection-start-column="21" selection-end-line="89" selection-end-column="21" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/analysis/pca/subset.csv">
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/link.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-end-column="12" />
+        <state relative-caret-position="304">
+          <caret line="28" column="18" lean-forward="true" selection-end-line="104" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/plotlytest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="23" column="37" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="37" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/linkedtest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="20" column="13" lean-forward="true" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

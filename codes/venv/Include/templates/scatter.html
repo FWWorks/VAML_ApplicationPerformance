@@ -9,7 +9,7 @@
 <div id="graphDiv" style="width:800px;height:500px;"></div>
 
 <script>
-Plotly.d3.csv('https://raw.githubusercontent.com/bcdunbar/datasets/master/iris.csv', function(err, rows){
+Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/kmeans/projection.csv', function(err, rows){
 function unpack(rows, key) {
   return rows.map(function(row) {
     return row[key];
@@ -18,27 +18,44 @@ function unpack(rows, key) {
 
 var data = [{
   type: 'scatter',
-  x: unpack(rows, 'species_id'),
-  y: unpack(rows, 'sepal_width'),
+  x: unpack(rows, 'host_context_switch'),
+  y: unpack(rows, 'host_disk_weighted_io_time'),
   mode: 'markers',
   transforms: [{
     type: 'groupby',
-    groups: unpack(rows, 'species_id'),
+    groups: unpack(rows, 'cluster'),
     styles: [
-      {target: '1', value: {marker: {color: 'blue'}}},
-      {target: '2', value: {marker: {color: 'red'}}},
-      {target: '3', value: {marker: {color: 'black'}}}
+      {target: '1', value: {marker: {color: 'rgb(215,48,39)'}}},
+      {target: '2', value: {marker: {color: 'rgb(244,109,67)'}}},
+      {target: '3', value: {marker: {color: 'rgb(253,174,97)'}}},
+      {target: '4', value: {marker: {color: 'rgb(254,224,144)'}}},
+      {target: '5', value: {marker: {color: 'rgb(224,243,248)'}}},
+      {target: '6', value: {marker: {color: 'rgb(171,217,233)'}}},
+      {target: '7', value: {marker: {color: 'rgb(100,48,39)'}}},
+      {target: '8', value: {marker: {color: 'rgb(36,109,34)'}}},
+      {target: '9', value: {marker: {color: 'rgb(53,174,197)'}}},
+      {target: '10', value: {marker: {color: 'rgb(15,48,39)'}}},
+      {target: '11', value: {marker: {color: 'rgb(44,109,167)'}}},
+      {target: '12', value: {marker: {color: 'rgb(53,174,97)'}}},
+      {target: '13', value: {marker: {color: 'rgb(48,32,97)'}}}
     ]
   }]
 }]
-Plotly.plot('graphDiv', data)
+var layout = {
+  title: 'Projection view',
+  xaxis: {
+    title: 'host_context_switch',
+    showgrid: false,
+    zeroline: false
+  },
+  yaxis: {
+    title: 'host_disk_weighted_io_time',
+    showline: false
+  }
+};
+Plotly.plot('graphDiv', data, layout, {displayModeBar: false})
 
 });
-
-
-
-
-
 </script>
 </body>
 </html>

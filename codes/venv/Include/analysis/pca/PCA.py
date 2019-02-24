@@ -5,6 +5,7 @@ import pandas as pd
 def prepare_subset():
     dataset = pd.read_csv("subset.csv")
     subset = dataset.drop(['benchmark_id'], axis=1)
+    subset = dataset.drop(['cluster'], axis=1)
     return subset
 
 

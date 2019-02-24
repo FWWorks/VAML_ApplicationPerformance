@@ -2,9 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 </head>
 <body>
-$END$
+<div id="graphDiv" style="width:1000px;height:650px;"></div>
+<script>
+Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/pca/subset.csv', function(err, rows){
+
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var data = [{
+  type: 'parcoords',
+  pad: [20,20,20,20],
+  line: {
+    color: unpack(rows, 'cluster'),
+    colorscale: [
+      [1,'rgb(215,48,39)'],
+      [2, 'rgb(244,109,67)'],
+      [3, 'rgb(253,174,97)'],
+      [4, 'rgb(254,224,144)'],
+      [5, 'rgb(224,243,248)'],
+      [6,'rgb(171,217,233)'],
+      [7, 'rgb(100,48,39)'],
+      [8, 'rgb(36,109,34)'],
+      [9,'rgb(53,174,197)'],
+      [10, 'rgb(15,48,39)'],
+      [11, 'rgb(44,109,167)'],
+      [12, 'rgb(53,174,97)'],
+      [13, 'rgb(48,32,97)']
+    ]
+
+  },
+
+  dimensions: [{
+    "label": 'CPI',
+    "values": unpack(rows, 'host_CPI')
+  }, {
+    label: 'L2BW',
+    values: unpack(rows, 'host_L2_BW')
+  }, {
+    label: 'L3BW',
+    values: unpack(rows, 'host_L3_BW')
+  }, {
+    label: 'L3SYSBW',
+    values: unpack(rows, 'host_L3_SYSTEM_BW')
+  },{
+    "label": 'MEMBW',
+    "values": unpack(rows, 'host_MEM_BW')
+  }, {
+    label: 'contextswitch',
+    values: unpack(rows, 'host_context_switch')
+  }, {
+    label: 'cpupercent',
+    values: unpack(rows, 'host_cpupercent')
+  }, {
+    label: 'diskio',
+    values: unpack(rows, 'host_disk_io')
+  },
+  {
+    "label": 'diskiotime',
+    "values": unpack(rows, 'host_disk_io_time')
+  }, {
+    label: 'disk_weighted_io_time',
+    values: unpack(rows, 'host_disk_weighted_io_time')
+  }, {
+    label: 'memory',
+    values: unpack(rows, 'host_memory')
+  }, {
+    label: 'network',
+    values: unpack(rows, 'host_network')
+  },{
+    "label": 'latency',
+    "values": unpack(rows, 'latency')
+  }, {
+    label: 'latency90',
+    values: unpack(rows, 'latency90')
+  }, {
+    label: 'dur_ms',
+    values: unpack(rows, 'process_dur_ms')
+  }, {
+    label: 'total_dur',
+    values: unpack(rows, 'total_dur_ms')
+  },
+  {
+    label: 'weighted_latency',
+    values: unpack(rows, 'weighted_latency')
+  }
+  ]
+}];
+
+var layout = {
+  width: 800
+};
+Plotly.plot('graphDiv', data, layout, {displayModeBar: false});
+
+});
+</script>
+
 </body>
 </html>

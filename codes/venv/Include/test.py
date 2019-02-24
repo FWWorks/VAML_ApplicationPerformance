@@ -9,7 +9,7 @@ def data_view():
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return render_template("parallel.html")
 
 if __name__ == '__main__':
     app.run()
