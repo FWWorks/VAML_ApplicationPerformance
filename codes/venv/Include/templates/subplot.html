@@ -30,7 +30,7 @@
 
 		</div>
 		<div id="parallel2">
-			<p>这是底部</p>
+
 		</div>
 	</div>
 <script>
@@ -271,6 +271,38 @@ graphDiv.on('plotly_selected', function(eventData) {
 
 });
 
+</script>
+
+<script>
+Plotly.d3.csv("https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/correlation/correlation.csv", function(err, rows){
+
+  function unpack(rows, key) {
+  return rows.map(function(row) { return row[key]; });
+  }
+var headerNames = Plotly.d3.keys(rows[0]);
+
+  var headerValues = [];
+  var cellValues = [];
+  for (i = 0; i < headerNames.length; i++) {
+    headerValue = [headerNames[i]];
+    headerValues[i] = headerValue;
+    cellValue = unpack(rows, headerNames[i]);
+    cellValues[i] = cellValue;
+  }
+var data = [{
+  type: 'table',
+  cells: {
+    values: cellValues,
+    align: "center",
+    line: {color: "black", width: 1},
+    font: {family: "Arial", size: 11, color: ["black"]}
+  }
+}]
+layout = {
+}
+
+Plotly.plot('parallel2', data,  layout, {displayModeBar: false});
+});
 </script>
 </body>
 </html>
