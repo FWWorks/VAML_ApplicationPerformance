@@ -7,6 +7,6 @@ def prepare_subset():
     return subset
 
 data = prepare_subset().values
-result = np.corrcoef(data)
+result = np.corrcoef(data,rowvar=0)
 df=pd.DataFrame(result)
 df.to_csv(r"correlation.csv")
