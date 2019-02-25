@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
+<style>
 		#div0{
-			width: 100%;height: 640px;
+			width: 100%;height: 700px;
 		}
 		#scatter{
-			width: 50%;height: 100%;float: left;
+			width: 50%;height: 50%;float: left;
 		}
 		#parallel{
 			width: 50%;height: 50%;float: left;
@@ -17,6 +17,10 @@
 		#parallel2{
 			width: 50%; height: 50%;float: left;
 		}
+		#correlation{
+			width: 50%; height: 50%;float: left;
+		}
+
 
 	</style>
 
@@ -26,13 +30,19 @@
 		<div id="scatter">
 
 		</div>
+
 		<div id="parallel">
 
 		</div>
-		<div id="parallel2">
 
-		</div>
+		<div id="parallel2"></div>
+	<div id="correlation"></div>
+
+
+
 	</div>
+
+
 <script>
 Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/pca/subset.csv', function(err, rows){
 
@@ -299,10 +309,111 @@ var data = [{
   }
 }]
 layout = {
+autosize:true
 }
 
-Plotly.plot('parallel2', data,  layout, {displayModeBar: false});
+Plotly.plot('correlation', data,  layout, {displayModeBar: false});
 });
+</script>
+
+<script>
+Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/eigenvector/minMax.csv', function(err, rows){
+
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var trace1 = {
+  type: 'parcoords',
+  //pad: [20,20,20,20],
+  line: {
+    color: unpack(rows, '18'),
+    colorscale: [
+      [0,'rgb(215,48,39)'],
+      [0.077, 'rgb(244,109,67)'],
+      [0.154, 'rgb(253,174,97)'],
+      [0.231, 'rgb(254,224,144)'],
+      [0.308, 'rgb(224,243,248)'],
+      [0.385,'rgb(171,217,233)'],
+      [0.462, 'rgb(100,48,39)'],
+      [0.539, 'rgb(36,109,34)'],
+      [0.616,'rgb(53,174,197)'],
+      [0.693, 'rgb(15,48,39)'],
+      [0.77, 'rgb(44,109,167)'],
+      [0.847, 'rgb(53,174,97)'],
+      [1, 'rgb(48,32,97)']
+    ]
+
+  },
+
+  dimensions: [{
+    "label": 'CPI',
+    "values": unpack(rows, '0')
+  }, {
+    label: 'L2BW',
+    values: unpack(rows, '1')
+  }, {
+    label: 'L3BW',
+    values: unpack(rows, '2')
+  }, {
+    label: 'L3SYSBW',
+    values: unpack(rows, '3')
+  },{
+    "label": 'MEMBW',
+    "values": unpack(rows, '4')
+  }, {
+    label: 'contextswitch',
+    values: unpack(rows, '5')
+  }, {
+    label: 'cpupercent',
+    values: unpack(rows, '6')
+  }, {
+    label: 'diskio',
+    values: unpack(rows, '7')
+  },
+  {
+    "label": 'diskiotime',
+    "values": unpack(rows, '8')
+  }, {
+    label: 'disk_weighted_io_time',
+    values: unpack(rows, '9')
+  }, {
+    label: 'memory',
+    values: unpack(rows, '10')
+  }, {
+    label: 'network',
+    values: unpack(rows, '11')
+  },{
+    "label": 'latency',
+    "values": unpack(rows, '12')
+  }, {
+    label: 'latency90',
+    values: unpack(rows, '13')
+  }, {
+    label: 'dur_ms',
+    values: unpack(rows, '14')
+  }, {
+    label: 'total_dur',
+    values: unpack(rows, '15')
+  },
+  {
+    label: 'weighted_latency',
+    values: unpack(rows, '16')
+  }
+  ]
+};
+
+
+var layout = {
+autosize:true
+
+};
+
+Plotly.newPlot('parallel2', [trace1], layout, {displayModeBar: false});
+});
+
 </script>
 </body>
 </html>
