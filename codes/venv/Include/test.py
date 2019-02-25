@@ -8,8 +8,8 @@ def data_view():
     return render_template('test.html')
 
 @app.route('/')
-def hello_world():
-    return render_template("parallel.html")
+def main_view():
+    return render_template("subplot.html")
 
 if __name__ == '__main__':
     app.run()
