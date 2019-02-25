@@ -8,5 +8,6 @@ def prepare_subset():
 
 data = prepare_subset().values
 result = np.corrcoef(data,rowvar=0)
+result = np.around(result, decimals=2)
 df=pd.DataFrame(result)
 df.to_csv(r"correlation.csv")
