@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+		#div0{
+			width: 100%;height: 640px;
+		}
+		#scatter{
+			width: 50%;height: 100%;float: left;
+		}
+		#parallel{
+			width: 50%;height: 50%;float: left;
+		}
+		#parallel2{
+			width: 50%; height: 50%;float: left;
+		}
+
+	</style>
+
+</head>
+<body>
+<div id="div0">
+		<div id="scatter">
+
+		</div>
+		<div id="parallel">
+
+		</div>
+		<div id="parallel2">
+			<p>这是底部</p>
+		</div>
+	</div>
+<script>
+Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/pca/subset.csv', function(err, rows){
+
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var trace0 = {
+ //xaxis: 'x2',
+  //yaxis: 'y2',
+  type: 'scatter',
+  x: unpack(rows, 'host_context_switch_pca'),
+  y: unpack(rows, 'host_disk_weighted_io_time_pca'),
+
+  mode: 'markers',
+  transforms: [{
+    type: 'groupby',
+    groups: unpack(rows, 'cluster'),
+    styles: [
+      {target: '1', value: {marker: {color: 'rgb(215,48,39)'}}},
+      {target: '2', value: {marker: {color: 'rgb(244,109,67)'}}},
+      {target: '3', value: {marker: {color: 'rgb(253,174,97)'}}},
+      {target: '4', value: {marker: {color: 'rgb(254,224,144)'}}},
+      {target: '5', value: {marker: {color: 'rgb(224,243,248)'}}},
+      {target: '6', value: {marker: {color: 'rgb(171,217,233)'}}},
+      {target: '7', value: {marker: {color: 'rgb(100,48,39)'}}},
+      {target: '8', value: {marker: {color: 'rgb(36,109,34)'}}},
+      {target: '9', value: {marker: {color: 'rgb(53,174,197)'}}},
+      {target: '10', value: {marker: {color: 'rgb(15,48,39)'}}},
+      {target: '11', value: {marker: {color: 'rgb(44,109,167)'}}},
+      {target: '12', value: {marker: {color: 'rgb(53,174,97)'}}},
+      {target: '13', value: {marker: {color: 'rgb(48,32,97)'}}}
+    ]
+  }]
+}
+
+var trace1 = {
+xaxis: 'x1',
+  yaxis: 'y1',
+  type: 'parcoords',
+  //pad: [20,20,20,20],
+  line: {
+    color: unpack(rows, 'cluster'),
+    colorscale: [
+      [0,'rgb(215,48,39)'],
+      [0.077, 'rgb(244,109,67)'],
+      [0.154, 'rgb(253,174,97)'],
+      [0.231, 'rgb(254,224,144)'],
+      [0.308, 'rgb(224,243,248)'],
+      [0.385,'rgb(171,217,233)'],
+      [0.462, 'rgb(100,48,39)'],
+      [0.539, 'rgb(36,109,34)'],
+      [0.616,'rgb(53,174,197)'],
+      [0.693, 'rgb(15,48,39)'],
+      [0.77, 'rgb(44,109,167)'],
+      [0.847, 'rgb(53,174,97)'],
+      [1, 'rgb(48,32,97)']
+    ]
+
+  },
+
+  dimensions: [{
+    "label": 'CPI',
+    "values": unpack(rows, 'host_CPI')
+  }, {
+    label: 'L2BW',
+    values: unpack(rows, 'host_L2_BW')
+  }, {
+    label: 'L3BW',
+    values: unpack(rows, 'host_L3_BW')
+  }, {
+    label: 'L3SYSBW',
+    values: unpack(rows, 'host_L3_SYSTEM_BW')
+  },{
+    "label": 'MEMBW',
+    "values": unpack(rows, 'host_MEM_BW')
+  }, {
+    label: 'contextswitch',
+    values: unpack(rows, 'host_context_switch')
+  }, {
+    label: 'cpupercent',
+    values: unpack(rows, 'host_cpupercent')
+  }, {
+    label: 'diskio',
+    values: unpack(rows, 'host_disk_io')
+  },
+  {
+    "label": 'diskiotime',
+    "values": unpack(rows, 'host_disk_io_time')
+  }, {
+    label: 'disk_weighted_io_time',
+    values: unpack(rows, 'host_disk_weighted_io_time')
+  }, {
+    label: 'memory',
+    values: unpack(rows, 'host_memory')
+  }, {
+    label: 'network',
+    values: unpack(rows, 'host_network')
+  },{
+    "label": 'latency',
+    "values": unpack(rows, 'latency')
+  }, {
+    label: 'latency90',
+    values: unpack(rows, 'latency90')
+  }, {
+    label: 'dur_ms',
+    values: unpack(rows, 'process_dur_ms')
+  }, {
+    label: 'total_dur',
+    values: unpack(rows, 'total_dur_ms')
+  },
+  {
+    label: 'weighted_latency',
+    values: unpack(rows, 'weighted_latency')
+  }
+  ]
+};
+
+
+var layout = {
+autosize:false,
+    width:800,
+    height:800,
+
+grid: {
+    rows: 2,
+    columns: 1,
+    pattern: 'independent',
+    roworder: 'bottom to top'},
+
+     xaxis2: {
+    title: 'host_context_switch',
+    showgrid: false,
+    zeroline: false,
+    anchor: 'x2',
+
+  },
+  yaxis2: {
+    title: 'host_disk_weighted_io_time',
+    showline: false,
+    anchor: 'y2',
+
+  }
+
+};
+
+//Plotly.newPlot('graph', [trace0, trace1], layout);
+//Plotly.newPlot('graph', [trace0,trace3]);
+Plotly.newPlot('parallel', [trace1], {scrollZoom: true}, {displayModeBar: false});
+
+
+var graphDiv = document.getElementById('scatter');
+var N = 1000;
+var color1 = '#7b3294';
+var color1Light = '#c2a5cf';
+var colorX = '#ffa7b5';
+var colorY = '#fdae61';
+
+function randomArray() {
+  var out = new Array(N);
+  for(var i = 0; i < N; i++) {
+    out[i] = Math.random();
+  }
+  return out;
+}
+var x = randomArray();
+var y = randomArray();
+
+Plotly.plot(graphDiv, [trace0, {
+  type: 'histogram',
+  x: x,
+  xaxis: 'x2',
+  yaxis: 'y2',
+  name: 'x coord dist.',
+  marker: {color: colorX}
+}, {
+  type: 'histogram',
+  x: y,
+  xaxis: 'x3',
+  yaxis: 'y3',
+  name: 'y coord dist.',
+  marker: {color: colorY}
+}], {
+    autosize:true,
+  dragmode: 'lasso',
+  xaxis: {
+    zeroline: false,
+  },
+  yaxis: {
+    domain: [0.30, 1],
+  },
+  xaxis2: {
+    domain: [0, 0.25],
+    anchor: 'y2',
+  },
+  yaxis2: {
+    domain: [0, 0.25],
+    anchor: 'x2'
+  },
+  xaxis3: {
+    domain: [0.75, 1],
+    anchor: 'y3'
+  },
+  yaxis3: {
+    domain: [0, 0.25],
+    anchor: 'x3'
+  }
+},{scrollZoom: true},{displayModeBar: false} );
+
+graphDiv.on('plotly_selected', function(eventData) {
+  var x = [];
+  var y = [];
+
+  var colors = [];
+  for(var i = 0; i < N; i++) colors.push(color1Light);
+
+  console.log(eventData.points)
+
+  eventData.points.forEach(function(pt) {
+    x.push(pt.x);
+    y.push(pt.y);
+    colors[pt.pointNumber] = color1;
+  });
+
+  Plotly.restyle(graphDiv, {
+    x: [x, y],
+    xbins: {}
+  }, [1, 2]);
+
+  Plotly.restyle(graphDiv, 'marker.color', [colors], [0]);
+});
+
+
+
+});
+
+</script>
+</body>
+</html>

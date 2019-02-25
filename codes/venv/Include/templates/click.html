@@ -7,7 +7,6 @@
 </head>
 <body>
 <div id="graph" style="width:800px;height:500px;"></div>
-<div id="graph2" style="width:800px;height:500px;"></div>
 <script>
 Plotly.d3.csv('https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/codes/venv/Include/analysis/pca/subset.csv', function(err, rows){
 
@@ -18,9 +17,12 @@ function unpack(rows, key) {
 }
 
 var trace0 = {
+ //xaxis: 'x2',
+  //yaxis: 'y2',
   type: 'scatter',
   x: unpack(rows, 'host_context_switch_pca'),
   y: unpack(rows, 'host_disk_weighted_io_time_pca'),
+
   mode: 'markers',
   transforms: [{
     type: 'groupby',
@@ -41,61 +43,90 @@ var trace0 = {
       {target: '13', value: {marker: {color: 'rgb(48,32,97)'}}}
     ]
   }]
+};
+
+var graphDiv = document.getElementById('graph');
+var N = 1000;
+var color1 = '#7b3294';
+var color1Light = '#c2a5cf';
+var colorX = '#ffa7b5';
+var colorY = '#fdae61';
+
+function randomArray() {
+  var out = new Array(N);
+  for(var i = 0; i < N; i++) {
+    out[i] = Math.random();
+  }
+  return out;
 }
+var x = randomArray();
+var y = randomArray();
 
-var trace1 = {
-  x: [1, 2],
-  y: [1, 2],
-  type: 'scatter',
-  name: '(1,2)',
+Plotly.plot(graphDiv, [trace0, {
+  type: 'histogram',
+  x: x,
   xaxis: 'x2',
-  yaxis: 'y2'
-};
-
-var trace2 = {
-  type: 'parcoords',
-  pad: [20,20,20,20],
-  line: {
-    color: unpack(rows, 'species_id'),
-    colorscale: [[0, 'red'], [0.5, 'green'], [1, 'blue']]
+  yaxis: 'y2',
+  name: 'x coord dist.',
+  marker: {color: colorX}
+}, {
+  type: 'histogram',
+  x: y,
+  xaxis: 'x3',
+  yaxis: 'y3',
+  name: 'y coord dist.',
+  marker: {color: colorY}
+}], {
+    autosize:true,
+  dragmode: 'lasso',
+  xaxis: {
+    zeroline: false,
   },
+  yaxis: {
+    domain: [0.55, 1],
+  },
+  xaxis2: {
+    domain: [0, 0.45],
+    anchor: 'y2',
+  },
+  yaxis2: {
+    domain: [0, 0.45],
+    anchor: 'x2'
+  },
+  xaxis3: {
+    domain: [0.55, 1],
+    anchor: 'y3'
+  },
+  yaxis3: {
+    domain: [0, 0.45],
+    anchor: 'x3'
+  }
+},{scrollZoom: true});
 
-  dimensions: [{
-    "range": [2, 4.5],
-    "label": 'sepal_width',
-    "values": unpack(rows, 'sepal_width')
-  }, {
-    constraintrange: [5, 6],
-    range: [4,8],
-    label: 'sepal_length',
-    values: unpack(rows, 'sepal_length')
-  }, {
-    label: 'petal_width',
-    range: [0, 2.5],
-    values: unpack(rows, 'petal_width')
-  }, {
-    label: 'petal_length',
-    range: [1, 7],
-    values: unpack(rows, 'petal_length')
-  }]
-};
+graphDiv.on('plotly_selected', function(eventData) {
+  var x = [];
+  var y = [];
+
+  var colors = [];
+  for(var i = 0; i < N; i++) colors.push(color1Light);
+
+  console.log(eventData.points)
+
+  eventData.points.forEach(function(pt) {
+    x.push(pt.x);
+    y.push(pt.y);
+    colors[pt.pointNumber] = color1;
+  });
+
+  Plotly.restyle(graphDiv, {
+    x: [x, y],
+    xbins: {}
+  }, [1, 2]);
+
+  Plotly.restyle(graphDiv, 'marker.color', [colors], [0]);
+});
 
 
-var layout = {
-autosize:false,
-    width:600,
-    height:600,
-grid: {
-
-    rows: 2,
-    columns: 1,
-    pattern: 'independent',
-    roworder: 'bottom to top'}
-};
-
-Plotly.newPlot('graph', [trace0,trace1], layout);
-//Plotly.newPlot('graph2', [trace0]);
-//Plotly.newPlot('graph', [trace2]);
 });
 
 </script>
