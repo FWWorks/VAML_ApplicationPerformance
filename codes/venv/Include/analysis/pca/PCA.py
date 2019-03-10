@@ -5,13 +5,14 @@ import pandas as pd
 def prepare_subset():
     dataset = pd.read_csv("subset.csv")
     subset = dataset.drop(['benchmark_id'], axis=1)
-    subset = dataset.drop(['cluster'], axis=1)
+    subset = subset.drop(['cluster'], axis=1)
     return subset
 
 
 def pca(dataset):
     pca = PCA(n_components=2)
     new = pca.fit_transform(dataset)
+    print (pca.explained_variance_)
     return pca.components_, new
         #ratio = pca.explained_variance_ratio_
         #print (pca.explained_variance_)
@@ -37,9 +38,9 @@ def get_most_important_components(lst, dataset):
 
 dataset = prepare_subset()
 a = pca(dataset)[0]
-projection = pca(dataset)[1]
-print (a)
-print (get_most_important_components(a, dataset))
-print (projection)
-df=pd.DataFrame(projection)
-df.to_csv(r"projection.csv")
+#projection = pca(dataset)[1]
+#print (a)
+#print (get_most_important_components(a, dataset))
+#print (projection)
+#df=pd.DataFrame(projection)
+#df.to_csv(r"projection.csv")
