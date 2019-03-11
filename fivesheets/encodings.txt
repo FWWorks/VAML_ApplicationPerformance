@@ -1,0 +1,92 @@
+Due to limited space for sketch layout in each sheet, I write this ducument to record some encodings. 
+
+Sheet2:
+view 1: 
+mark: scatter
+x: PC1, quantity
+y: PC2, quantity
+color: cluster, nominal
+
+view 2:
+mark: bar
+x: PC's value, ordinal
+y: amount, quantity
+
+view 3:
+mark: parallel coordinator
+vertical lines: dimension of dataset
+lines: data item
+color: cluster, nominal
+
+view 4:
+mark: parallel coordinator
+vertical lines: principle components
+lines: data item
+color: cluster, nominal
+
+view 5:
+mark: table
+x: field name, nominal
+y: field name, nominal
+each unit is quantity
+opacity: correlation factor, quantity
+
+view 6:
+mark: scatter
+x: feature name, quantity
+y: feature name, quantity
+
+Sheet 3:
+left view:
+mark: scatter
+x: PC1, quantity
+y: PC2, quantity
+color: cluster, nominal
+
+right view:
+mark: heatmap
+x: cluster, nominal
+y: feature name, nominal
+color: feature, nominal
+opacity: feature value, quantity
+
+Sheet 4:
+upper view:
+mark: line
+x: time, timestamp
+y: percent, quantity
+color: feature, nominal
+mark: scatter(at the end of line)(represent prediction value)
+x: time
+y: percent, quantity
+
+downside view:
+mark: heatmap
+x: time, timestamp
+y: feature name, nominal
+color: feature, nominal
+opacity: feature value, quantity
+
+Sheet 4_Alt:
+upper view:
+mark: line
+x: time, timestamp
+y: feature value, quantity
+color: feature, nominal
+mark: scatter(represent prediction value)
+x: time
+y: feature value, quantity
+
+downside view:
+mark: heatmap
+x: time, timestamp
+y: feature name, nominal
+color: feature, nominal
+opacity: feature value, quantity
+
+
+
+
+
+
+
