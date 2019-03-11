@@ -1,0 +1,3 @@
+web application based on flask. 
+using HTML5 + js + css
+library: D3.js(for PCA/clustering part because of good support for linked views) and plotly.js(for time series part)
