@@ -1,0 +1,29 @@
+Sheet2
+view 1 (scatter plot)
+points with different colors
+each color represents which cluster the point belongs to
+
+view 3&4
+each line has color. color represents which cluster the data item beongs to
+(same color as view 1)
+
+Sheet3
+scatter plot
+points with different colors
+each color represents which cluster the point belongs to
+
+heatmap
+heatmap has different colors to show quantity
+
+Sheet4
+line chart
+each line has color to show identfication. (color <=5) (color <=5)(color <=5)So there's upper bound on line's amount
+in the end of each line, there's a point with color red, to show it is a prediction result.
+
+heatmap
+heatmap
+heatmap has different colors to show quantity
+
+Layout modification
+I will use one button to seperate time series related views from others, instead of using 2 buttons. 
+Trying to apply data-ink ratio principle...
