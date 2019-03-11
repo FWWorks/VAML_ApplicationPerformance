@@ -13,7 +13,8 @@ points with different colors
 each color represents which cluster the point belongs to
 
 heatmap
-heatmap has different colors to show quantity
+heatmap has different colors to show different feature
+opacity shows quantity
 
 Sheet4
 line chart
@@ -21,9 +22,6 @@ each line has color to show identfication. (color <=5) (color <=5)(color <=5)So 
 in the end of each line, there's a point with color red, to show it is a prediction result.
 
 heatmap
-heatmap
-heatmap has different colors to show quantity
+heatmap has different colors to show different feature
+opacity shows quantity
 
-Layout modification
-I will use one button to seperate time series related views from others, instead of using 2 buttons. 
-Trying to apply data-ink ratio principle...
