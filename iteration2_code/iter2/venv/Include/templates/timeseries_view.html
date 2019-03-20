@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/examples/style.css">
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/examples/lib/d3.min.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/examples/lib/divgrid.js"></script>
     <style>
 		#div0{
 			width: 100%;height: 100%;
@@ -13,6 +17,17 @@
 		#div1{
 			width: 50%;height: 100%;float: left;
 		}
+		#div2{
+			width: 50%;height: 100%;float: right;
+		}
+
+    /* data table styles */
+    #grid { height: 198px; }
+    .row, .header { clear: left; font-size: 12px; line-height: 18px; height: 18px; }
+    .row:nth-child(odd) { background: rgba(0,0,0,0.05); }
+    .header { font-weight: bold; }
+    .cell { float: left; overflow: hidden; white-space: nowrap; width: 100px; height: 18px; }
+    .col-0 { width: 180px; }
 
 
 
@@ -50,9 +65,96 @@
 		<div id="graph_heatmap"></div>
 
         </div>
+    <div id="div2">
+        <div id="origin_data" class="parcoords" style="height:200px;"></div>
+        <div id="eigenvector" class="parcoords" style="height:200px;"></div>
+        <div id="grid"></div>
 
+
+    </div>>
 
 	</div>
+
+<script id="brushing">// quantitative color scale
+$("document").ready(function() {
+var blue_to_brown = d3.scale.linear()
+  .domain([9, 50])
+  .range(["steelblue", "brown"])
+  .interpolate(d3.interpolateLab);
+
+var color = function(d) { return blue_to_brown(d['client']); };
+var original_ignore = {{ignore|tojson}}["ig"];
+var parcoords = d3.parcoords()("#origin_data")
+  .color(color)
+  .alpha(0.4);
+
+var eigenvector = d3.parcoords()("#eigenvector")
+  .color(color)
+  .alpha(0.4);
+
+// load csv file and create the chart
+var url = 'https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/iteration2_code/iter2/venv/Include/projection_';
+	var name = {{ selected_names|tojson}}["names"];
+	console.log(name);
+	name = name;
+	url = url + name + '.csv'
+
+d3.csv(url, function(data) {
+  parcoords
+    .data(data)
+    .hideAxis(original_ignore)
+    .render()
+    .brushMode("1D-axes");  // enable brushing
+
+eigenvector
+    .data(data)
+    .hideAxis(["name", "time", "background", "CPI", 'BW','L3_BW','L2_BW','MEM_BW','latency90','client'])
+    .render()
+    .brushMode("1D-axes");  // enable brushing
+
+  // create data table, row hover highlighting
+  var grid = d3.divgrid();
+  d3.select("#grid")
+    .datum(data.slice(0,5))
+    .call(grid)
+    .selectAll(".row")
+    .on({
+      "mouseover": function(d) { parcoords.highlight([d]);
+		},
+      "mouseout": parcoords.unhighlight
+
+    });
+
+  // update data table on brush event
+  parcoords.on("brush", function(d) {
+	  //alert(JSON.stringify(d));
+	  eigenvector.highlight(d);
+    d3.select("#grid")
+      .datum(d.slice(0,d.length))
+      .call(grid)
+      .selectAll(".row")
+      .on({
+        "mouseover": function(d) {
+
+			parcoords.highlight([d])
+								 },
+        "mouseout": parcoords.unhighlight
+      });
+  }	);
+
+
+	 eigenvector.on("brush", function(d) {
+
+			 parcoords.highlight(d);
+
+
+  }	);
+
+
+});
+});
+</script>
+
 
 
 <script>
@@ -98,6 +200,7 @@ $("document").ready(function() {
                                         }
 
       var layout_line = {
+      title: 'Real-time performance monitoring',
              autosize: false,
             width: 600,
             height: 260,
@@ -247,7 +350,7 @@ $("document").ready(function() {
         }
 
     var layout = {
-      title: 'Sessions',
+      title: 'Real-time resource pressure',
       annotations: [],
         margin:{
         t: 30,
@@ -292,6 +395,7 @@ $("document").ready(function() {
          newArray.push(array_i.slice(0,time_length));
        var small_heatmap = {
           type: 'heatmap',
+
           y: [i],
           x: x1,
           z: [array_i],

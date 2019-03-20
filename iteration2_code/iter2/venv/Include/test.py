@@ -98,7 +98,7 @@ def tstest():
     data_json = data.to_json(orient='records')
     metrics = ['CPI', 'BW', 'L3_BW', 'L2_BW', 'MEM_BW', 'client']
     names = set(data["name"])
-    default_selected_metrics = ['CPI', 'BW', 'L3_BW', 'L2_BW', 'MEM_BW']
+    default_selected_metrics = ["latency90"]
     default_algorithm = ["LR", "RNN"]
     default_selected_names = data["name"].tolist()[0]
     times = get_times(default_selected_names, data_json)
@@ -115,7 +115,11 @@ def tstest():
 
     print (len(metrics_value))
     print(lr_prediction)
-
+    ignore = {
+    "redis": ["name", "time", "background", "72.30%","10.60%","9.40%","4.90%","2.70%"],
+    "hmmer":  ["name", "time", "background", "99.60%","0.30%","0.05%","0.03%","0.02%"],
+    "sunflow": ["name", "time", "background", "87.80%","6.90%","4.00%","0.80%","0.30%"]
+    }
 
 
     if request.method == "POST":
@@ -133,17 +137,18 @@ def tstest():
             z_value = get_z(selected_names[0], selected_metrics, data_json, times)
 
             metrics_value = get_linechart_data(selected_names[0], selected_metrics, json.loads(data_json))
-            m_v_2 = get_linechart_data(selected_names[0], selected_metrics+["latency90"], json.loads(data_json))
+            m_v_2 = get_linechart_data(selected_names[0], ["latency90"] + selected_metrics, json.loads(data_json))
             return render_template("timeseries_view.html", metrics=metrics, selected_metrics={"metrics": selected_metrics+["latency90"]},
                                    names=names, selected_names={"names": selected_names}, name=selected_names,
                                    feathername={"fn": selected_metrics}, zvalue={"z": z_value}, times={"t": times},metricsvalue={"m_v": m_v_2},
-                                   selected_algorithms={"algorithms": algorithm_selected}, algorithms=default_algorithm, lr_pred={"lr": lr_prediction})
-
+                                   selected_algorithms={"algorithms": algorithm_selected}, algorithms=default_algorithm, lr_pred={"lr": lr_prediction},
+                                   ignore={"ig": ignore[selected_names[0]]})
+    print (default_selected_names)
     return render_template('timeseries_view.html', metrics=metrics, names=names, algorithms=default_algorithm,
                            selected_metrics={"metrics": default_selected_metrics},
                            selected_names={"names": default_selected_names}, name=default_selected_names,
                            feathername={"fn": default_selected_metrics}, zvalue={"z": z_value}, times={"t": times},metricsvalue={"m_v": metrics_value}
-                           ,selected_algorithms={"algorithms": default_algorithm}, lr_pred={"lr": lr_prediction})
+                           ,selected_algorithms={"algorithms": default_algorithm}, lr_pred={"lr": lr_prediction}, ignore={"ig": ignore[default_selected_names]})
 
 
 @app.route('/line',methods=['GET','POST'])
