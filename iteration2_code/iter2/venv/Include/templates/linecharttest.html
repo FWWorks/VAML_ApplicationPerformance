@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+	<div id="show"></div>
+	<div id="graph"></div>
+
+<script>
+$("document").ready(function() {
+    var times = {{times|tojson}}["t"];
+    var newArray = [];
+    var array_all = {{metricsvalue|tojson}}["m_v"];
+    var array_length = 10;
+    x1 = times.slice(0,array_length);
+
+    graph_data = []
+    for (var i=0; i<array_all.length; i++){
+        var array_i = array_all[i].slice(0,array_length);
+        newArray.push(array_i.slice(0,array_length));
+        var item = {
+              x:x1,
+              y: array_i,
+              mode: 'lines',
+              line: {color: '#80CAF6'}
+                    };
+        graph_data.push(item);
+
+                                        }
+
+     var layout = {
+     autosize: false,
+    width: 600,
+    height: 500,
+    margin:{
+        t: 20,
+        l: 30,
+        r: 0
+    }
+     };
+    Plotly.plot('graph', graph_data, layout);
+
+    var cnt = 0;
+
+    var interval = setInterval(function() {
+      var x = times.slice(array_length, )[cnt];
+      console.log(x);
+      x1 = x1.concat(x);
+      x1.splice(0,1);
+
+      var new_y = [];
+      for (var i=0; i<array_all.length; i++){
+            var y = array_all[i][cnt];
+            newArray[i] = newArray[i].concat(y);
+            newArray[i].splice(0, 1);
+
+            new_y.push(newArray[i]);
+      }
+
+
+        var data_update = {
+                x: [x1],
+                y: new_y
+                         } ;
+
+      Plotly.update('graph', data_update)
+     cnt++;
+      if(cnt === times.length-array_length) {
+      cnt = 0;
+       for (var i=0; i<array_all.length; i++){
+       newArray[i] = array_all[i].slice(0,array_length);
+       }
+
+        x1 = times.slice(0,array_length);
+      //clearInterval(interval);
+      }
+    }, 1000);
+});
+</script>
+</body>
+</html>

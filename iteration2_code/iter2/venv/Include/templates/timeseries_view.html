@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+    <style>
+		#div0{
+			width: 100%;height: 100%;
+		}
+		#div1{
+			width: 50%;height: 100%;float: left;
+		}
+
+
+
+	</style>
+
+</head>
+<body>
+<div id="div0">
+
+        <div id="div1">
+
+            <form name="dropboxes" action="/ts" method='POST' id="dropform">
+<select name= metrics id="metricsDropdown" multiple="multiple" size="4">
+    {% for metric in metrics %}
+    <option value= "{{metric}}" >{{metric}}</option>"
+    {% endfor %}
+</select>
+    <select name= names id="namesDropdown" multiple="multiple" size="3">
+    {% for name in names %}
+    <option value= "{{name}}" >{{name}}</option>"
+    {% endfor %}
+    </select>
+
+    <select name= algorithms id="algorithmsDropdown" multiple="multiple" size="2">
+    {% for algorithm in algorithms %}
+    <option value= "{{algorithm}}" >{{algorithm}}</option>"
+    {% endfor %}
+    </select>
+
+    <input type="submit" value="Submit">
+</form>
+
+            <div id="graph_line" ></div>
+
+		<div id="graph_heatmap"></div>
+
+        </div>
+
+
+	</div>
+
+
+<script>
+$("document").ready(function() {
+
+    var times = {{times|tojson}}["t"];
+    var selected_m_line = {{selected_metrics|tojson}}["metrics"];
+    var newArray_line = [];
+    var newArray2 = [];
+    var array_length = 5;
+    var lr_prediction = {{lr_pred|tojson}}["lr"];
+
+    for(var i = 0; i <= array_length; i++) {
+      newArray2[i] = null;
+            }
+
+
+    var array_all = {{metricsvalue|tojson}}["m_v"];
+
+    x1_line = times.slice(0,array_length+1);
+    var cs_line = [
+        'rgb(106, 90, 205)',
+        'rgb(84, 255, 159)',//green
+        'rgb(127, 255, 212)', // CadetBlue1
+        'rgb(202, 255, 112)', //DarkOliveGreen1
+        'rgb(230, 230, 250	)', //Plum2
+        'rgb(255, 246, 143)' //Khaki1
+    ];
+
+    graph_data_line = []
+    for (var i=0; i<array_all.length; i++){
+        var array_i = array_all[i].slice(0,array_length);
+        newArray_line.push(array_i.slice(0,array_length));
+        var item_line = {
+              x:x1_line,
+              y: array_i,
+              mode: 'lines',
+              line: {color: cs_line[i]},
+              name: selected_m_line[i]
+                    };
+        graph_data_line.push(item_line);
+
+                                        }
+
+      var layout_line = {
+             autosize: false,
+            width: 600,
+            height: 260,
+              margin:{
+                t: 20,
+                l: 30,
+                r: 0
+                    }
+     };
+
+     graph_data_line.push(
+             {
+              //x:x1_line,
+              y: newArray2,
+               mode: 'markers',
+                type: 'scatter',
+                name: 'Prediction Value'
+                    }
+
+
+     );
+
+
+    Plotly.plot('graph_line', graph_data_line, layout_line,{displayModeBar: false});
+
+    var cnt_line = 0;
+    var scatter_cnt = 0;
+    var interval_line = setInterval(function() {
+      var x = times.slice(array_length, )[cnt_line];
+      x1_line = x1_line.concat(x);
+      x1_line.splice(0,1);
+      var new_y_line = [];
+      for (var i=0; i<array_all.length; i++){
+            var y = array_all[i][cnt_line];
+            newArray_line[i] = newArray_line[i].concat(y);
+            newArray_line[i].splice(0, 1);
+            new_y_line.push(newArray_line[i]);
+      }
+      newArray2 = newArray2.concat(lr_prediction[cnt_line + array_length ])
+        newArray2.splice(0, 1)
+        new_y_line.push(newArray2);
+        //x1_line.push(null);
+        var data_update_line = {
+                x: [x1_line],
+                y: new_y_line
+                         } ;
+
+      Plotly.update('graph_line', data_update_line)
+     cnt_line++;
+      if(cnt_line === times.length-array_length) {
+      cnt_line = 0;
+       for (var i=0; i<array_all.length; i++){
+       newArray_line[i] = array_all[i].slice(0,array_length);
+       }
+
+        //x1_line = times.slice(0,array_length);
+      //clearInterval(interval);
+      }
+    }, 2000);
+});
+</script>
+
+
+<script type="text/javascript">
+$("document").ready(function() {
+
+    var x = {{ selected_metrics|tojson}};
+    var metrics = x["metrics"];
+    var y = {{ selected_names|tojson}};
+    var names = y["names"];
+    var newArray = [];
+
+    var data = {{ feathername|tojson}};
+    var z_value = {{zvalue|tojson}};
+    var name = {{name|tojson}};
+    var options = data.fn;
+    var table_data = [];
+    var z_data_all = z_value["z"];
+
+    var times = {{times|tojson}}["t"];
+    console.log(times);
+    var time_number = times.length;
+
+
+    var yValues = data.fn;
+    var count = 0;
+    var annotations = [];
+    var nc = -1;
+    var time_length = 5;
+    var cat = times.slice(0,time_length);
+    var tickvals = [];
+    var tickvals2 = [];
+    x1 = times.slice(0,time_length);
+    var cs = [
+    [
+          [0, 'rgba(84, 255, 159,0.2)'],
+          [0.2, 'rgba(84, 255, 159,0.4)'],
+          [0.4, 'rgba(84, 255, 159,0.6)'],
+          [0.6, 'rgba(84, 255, 159,0.7)'],
+          [0.8, 'rgba(84, 255, 159,0.9)'],
+          [1, 'rgba(84, 255, 159,1.0)']
+    ],
+
+     [
+          [0, 'rgba(127, 255, 212,0.2)'],
+          [0.2, 'rgba(127, 255, 212,0.4)'],
+          [0.4, 'rgba(127, 255, 212,0.6)'],
+          [0.6, 'rgba(127, 255, 212,0.7)'],
+          [0.8, 'rgba(127, 255, 212,0.9)'],
+          [1, 'rgba(127, 255, 212,1.0)']
+    ],
+
+     [
+          [0, 'rgba(202, 255, 112,0.2)'],
+          [0.2, 'rgba(202, 255, 112,0.4)'],
+          [0.4, 'rgba(202, 255, 112,0.6)'],
+          [0.6, 'rgba(202, 255, 112,0.7)'],
+          [0.8, 'rgba(202, 255, 112,0.9)'],
+          [1, 'rgba(202, 255, 112,1.0)']
+    ],
+     [
+          [0, 'rgba(230, 230, 250,0.2)'],
+          [0.2, 'rgba(230, 230, 250,0.4)'],
+          [0.4, 'rgba(230, 230, 250,0.6)'],
+          [0.6, 'rgba(230, 230, 250,0.7)'],
+          [0.8, 'rgba(230, 230, 250,0.9)'],
+          [1, 'rgba(230, 230, 250,1.0)']
+    ],
+     [
+          [0, 'rgba(255, 246, 143,0.2)'],
+          [0.2, 'rgba(255, 246, 143,0.4)'],
+          [0.4, 'rgba(255, 246, 143,0.6)'],
+          [0.6, 'rgba(255, 246, 143,0.7)'],
+          [0.8, 'rgba(255, 246, 143,0.9)'],
+          [1, 'rgba(255, 246, 143,1.0)']
+    ]
+
+    ];
+    for (var i=0;i<x1.length;i++)
+       {
+       tickvals.push(i);
+       }
+
+     for (var i=0;i<options.length;i++)
+        {
+        tickvals2.push(i);
+        }
+
+    var layout = {
+      title: 'Sessions',
+      annotations: [],
+        margin:{
+        t: 30,
+        l: 50,
+        r: 0
+    },
+      autosize: false,
+        width: 400,
+        height: 300,
+      xaxis: {
+        ticks: '',
+        side: 'bottom',
+        tickvals: tickvals,
+        ticktext: x1,
+        showgrid: false,
+      },
+      yaxis: {
+        ticks: '',
+        ticksuffix: ' ',
+        width: 400,
+        height: 400,
+        //autosize: false,
+        showgrid: false,
+        tickvals: tickvals2,
+        ticktext: options,
+      }
+    };
+
+    var countx = 0;
+    var tmp_count = [];
+    for (var i=0;i<x1.length;i++)
+        {
+        tmp_count.push(i);
+        }
+
+
+
+    var data = [];
+    for (var i=0;i<options.length;i++)
+        {
+        var array_i = z_data_all[i].slice(0,time_length);
+         newArray.push(array_i.slice(0,time_length));
+       var small_heatmap = {
+          type: 'heatmap',
+          y: [i],
+          x: x1,
+          z: [array_i],
+          transpose: false,
+          colorscale:  cs[i],
+
+          showscale: false
+    };
+        data.push(small_heatmap);
+        }
+
+    tmp_count.forEach(function(i) {
+
+      nc++;
+      for (var x = 0; x < options.length; x++) {
+        catVar = options[x]
+        smt = cat[i]
+        if (x == 0) {
+          txt = newArray[x][nc]
+        } else {
+          txt = newArray[x][nc]
+        }
+
+        var result = {
+          xref: 'x1',
+          yref: 'y1',
+          y: x,
+          x: i,
+          text: txt,
+          font: {
+            family: 'Arial',
+            size: 12,
+            color: 'rgb(50, 171, 96)'
+          },
+          showarrow: false,
+        };
+
+        layout.annotations.push(result);
+      }
+
+    })
+
+
+    Plotly.newPlot('graph_heatmap', data, layout, {displayModeBar: false});
+
+    var cnt = 0;
+
+    var interval = setInterval(function() {
+      var x = times.slice(time_length, )[cnt];
+      x1 = x1.concat(x);
+      x1.splice(0,1);
+
+      var new_y = [];
+      for (var i=0; i<z_data_all.length; i++){
+            var y = z_data_all[i][cnt];
+            newArray[i] = newArray[i].concat(y);
+            newArray[i].splice(0, 1);
+
+            new_y.push(newArray[i]);
+      }
+        console.log(x1);
+
+    data = [];
+    for (var i=0;i<options.length;i++)
+        {
+       var small_heatmap = {
+          type: 'heatmap',
+          y: [i],
+          x: x1,
+          z: [new_y[i]],
+          transpose: false,
+          colorscale:  cs[i],
+          showscale: false
+    };
+        data.push(small_heatmap);
+        }
+
+
+
+    nc = -1;
+    layout.annotations = [];
+    tmp_count.forEach(function(i) {
+
+      nc++;
+      for (var x = 0; x < options.length; x++) {
+        catVar = options[x]
+        smt = cat[i]
+        if (x == 0) {
+          txt = new_y[x][nc]
+        } else {
+          txt = new_y[x][nc]
+        }
+
+        var result = {
+          xref: 'x1',
+          yref: 'y1',
+          y: x,
+          x: i,
+          text: txt,
+          font: {
+            family: 'Arial',
+            size: 12,
+            color: 'rgb(50, 171, 96)'
+          },
+          showarrow: false,
+        };
+
+        layout.annotations.push(result);
+      }
+
+    })
+
+    layout["xaxis"]["ticktext"] = x1;
+    Plotly.newPlot('graph_heatmap', data, layout, {displayModeBar: false});
+
+
+
+
+     cnt++;
+      if(cnt === times.length-time_length) {
+      cnt = 0;
+       for (var i=0; i<z_data_all.length; i++){
+       newArray[i] = z_data_all[i].slice(0,5);
+       }
+
+        x1 = times.slice(0,5);
+      //clearInterval(interval);
+      }
+    }, 2000);
+
+
+
+});
+	</script>
+</body>
+</html>

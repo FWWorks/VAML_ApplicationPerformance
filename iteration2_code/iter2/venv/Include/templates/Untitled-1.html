@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+<h4 id="show"></h4>
+<div id="myDiv"></div>
+<hr>
+<div id="graph"></div>
+
+<script>
+
+
+var options = ["(Other)", "Referral","Direct", "Organic Search", "Social"];
+var table_data = [];
+
+var yValues = ["(Other)", "Referral","Direct", "Organic Search", "Social"];
+var zValuesOne = [4,5];
+var zValuesTwo = [58, 51];
+	var zValues3 = [1,3];
+var zValues4 = [66, 77];
+	var zValues5 = [8,12];
+var count = 0;
+var annotations = []
+var nc = -1
+	var cat = ['Page Views/Sessions', 'Avg. Time on Site'];
+
+var layout = {
+  title: 'Sessions',
+  annotations: [],
+  xaxis: {
+    ticks: '',
+    side: 'bottom',
+    tickvals: [0, 1],
+    ticktext: cat
+  },
+  yaxis: {
+    ticks: '',
+    ticksuffix: ' ',
+    width: 700,
+    height: 700,
+    autosize: false,
+	  tickvals: [0, 1,2,3,4],
+    ticktext: options
+  }
+};
+
+var countx = 0;
+var tmp_count = [0,1];
+
+tmp_count.forEach(function(i) {
+
+  
+  //yValues.push(i.channel)
+  //options.push(i.channel)
+  //zValuesOne.push(parseInt(i.pageviews / i.sessions))
+  //zValuesTwo.push(parseInt(i.avg_time))
+  
+  nc++;
+  for (var x = 0; x < options.length; x++) {
+    catVar = options[x]
+    smt = cat[i]
+    if (x == 0) {
+      txt = zValuesOne[nc]
+    } 
+	  if( x == 1){
+      txt = zValuesTwo[nc]
+    }
+	  if( x == 2){
+      txt = zValues3[nc]
+    }
+	  if( x == 3){
+      txt = zValues4[nc]
+    }
+	  if( x == 4){
+      txt = zValues5[nc]
+    }
+//document.getElementById("show").innerHTML=txt;
+	  //document.write(txt);
+    var result = {
+      xref: 'x1',
+      yref: 'y1',
+      y: x,
+      x: i,
+      text: txt,
+      font: {
+        family: 'Arial',
+         size: 12,
+        color: 'rgb(50, 171, 96)'
+      },
+      showarrow: false,
+      //   font: {
+      //     color: textColor
+      //   }
+    };
+    
+    layout.annotations.push(result);
+  }
+
+})
+
+var cat = ['Page Views/Sessions', 'Avg. Time on Site'];
+
+
+var data = [{
+  type: 'heatmap',
+  y: [0],
+  x: cat,
+  z: [zValuesOne],
+  transpose: false,
+  colorscale: 'Greens',
+  showscale: false,
+	reversescale: true
+},
+			{
+  type: 'heatmap',
+  y: [1],
+  x: cat,
+  z: [zValuesTwo],
+  transpose: false,
+  colorscale: 'Reds',
+  showscale: false,
+	reversescale: true
+},
+				{
+  type: 'heatmap',
+  y: [2],
+  x: cat,
+  z: [zValues3],
+  transpose: false,
+  colorscale: 'Reds',
+  showscale: false,
+	reversescale: true
+},
+				{
+  type: 'heatmap',
+  y: [3],
+  x: cat,
+  z: [zValues4],
+  transpose: false,
+  colorscale: 'Greys',
+  showscale: false,
+	reversescale: true
+},
+				{
+  type: 'heatmap',
+  y: [4],
+  x: cat,
+  z: [zValues5],
+  transpose: false,
+  colorscale: 'Blues',
+  showscale: false,
+	reversescale: true
+}
+		   ]
+
+Plotly.newPlot('graph', data, layout)
+	 
+	</script>
+</body>
+</html>

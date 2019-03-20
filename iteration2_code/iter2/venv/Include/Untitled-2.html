@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<div id="graphDiv" ></div>
+
+<script>
+Plotly.d3.csv('timeseries.csv', function(err, rows){
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var data = [{
+  type: 'heatmap',
+  x: unpack(rows, 'time'),
+  y: unpack(rows, 'CPI'),
+  z: random_data()
+
+}];
+	function random_data() {
+  new_z = [];
+  for (var i = 0; i < 3; i += 1) {
+    new_z.push([]);
+    for (var j = 0; j < 3; j += 1) {
+      new_z[i].push(Math.random() * 100)
+    }
+  }
+  return new_z
+}
+
+var layout = {
+  title: 'Projection view',
+  xaxis: {
+    title: 'host_context_switch',
+    showgrid: false,
+    zeroline: false
+  },
+  yaxis: {
+    title: 'host_disk_weighted_io_time',
+    showline: false
+  }
+};
+Plotly.plot('graphDiv', data, layout, {displayModeBar: false})
+
+});
+</script>
+</body>
+</html>

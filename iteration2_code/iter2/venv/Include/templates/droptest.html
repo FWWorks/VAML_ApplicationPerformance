@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+   <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+<meta charset="utf-8">
+<title>h</title>
+</head>
+
+<body>
+<h1 id="show"></h1>
+<form name="dropboxes" action="/drop" method='POST' id="dropform">
+<select name= metrics id="metricsDropdown" multiple="multiple" size="4">
+    {% for metric in metrics %}
+    <option value= "{{metric}}" >{{metric}}</option>"
+    {% endfor %}
+</select>
+    <select name= names id="namesDropdown" multiple="multiple" size="3">
+    {% for name in names %}
+    <option value= "{{name}}" >{{name}}</option>"
+    {% endfor %}
+    </select>
+    <input type="submit" value="Submit">
+</form>
+  <div id="selectedMetircs">
+    {% if selected_metircs is defined %}
+        You have selected: {{ selected_metircs }}
+    {% endif %}
+  </div>
+    <div id="selectedNames" >
+    {% if selected_names is defined %}
+        You have selected: {{ selected_names }}
+    {% endif %}
+  </div>
+<script type="text/javascript">
+$("document").ready(function() {
+    var obj=document.getElementById('show');
+
+    var x = {{ selected_metircs|tojson}};
+    var metrics = x["metrics"];
+    var y = {{ selected_names|tojson}};
+    var names = y["names"];
+
+
+
+});
+
+</script>
+</body>
+</html>
