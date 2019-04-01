@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+    <script src="http://tabulator.info/js/tabulator/3.5/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.2/css/tabulator.min.css" rel="stylesheet">
+
+
+<style>
+.plotly-notifier{
+  visibility: hidden;
+}
+.tabulator-cell{height:100px; background-color: white}
+
+#div0{
+    width: 100%;height: 100%;
+    }
+#div1{
+	width: 50%;height: 100%;float: left;
+	}
+#div2{
+	width: 50%;height: 100%;float: right;
+	}
+</style>
+</head>
+<body>
+<div id="div0">
+    <div id="div1">
+        <div id="linechart" method="post"></div>
+        <h4 id="result"> click me</h4>
+        <div id="correlation_table" style="height:100%; width:100%;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+      function do_ajax2() {
+        var req = new XMLHttpRequest();
+        var result = document.getElementById('result');
+        req.onreadystatechange = function()
+        {
+          if(this.readyState == 4 && this.status == 200) {
+            result.innerHTML = this.responseText;
+
+          } else {
+            result.innerHTML = "処理中...";
+          }
+        }
+        req.open('POST', '/linechart', true);
+        req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        req.send("time=" + selected_time_start + "," + selected_time_end);
+      }
+    </script>
+
+
+
+<script>
+//line chart
+var application_name = {{application_name|tojson}};
+timeseries = {{timeseries|tojson}}["timeseries"];
+var line_chart_data = [{
+                mode: 'lines',
+                x: {{timeseries|tojson}}["timeseries"],
+                y: {{latency_90|tojson}}["latency_90"]
+                     }];
+var line_chart_layout = {
+                title: application_name + ' Preformance & Pressure',
+                xaxis: {
+
+                    //rangeselector: selectorOptions,
+                    rangeslider: {}
+                },
+                yaxis: {
+                    fixedrange: true
+                }
+                        };
+selected_time_start = "";
+selected_time_end = "";
+Plotly.plot('linechart', line_chart_data, line_chart_layout, {displayModeBar: false})
+.then(gd => {
+  var isMouseDown = false;
+  gd.addEventListener('mousedown', () => {
+    console.log('mousedown!')
+    isMouseDown = true
+  })
+
+  document.addEventListener('mouseup', () => {
+    if (isMouseDown) {
+      console.log('mouseup!')
+      selected_time_range = document.getElementById("linechart").layout.xaxis.range;
+      selected_time_start = timeseries[Math.round(selected_time_range[0])];
+      selected_time_end = timeseries[Math.round(selected_time_range[1])];
+      console.log(selected_time_start);
+      console.log(selected_time_end);
+      do_ajax2();
+      isMouseDown = false
+    }
+  })
+});
+</script>
+
+<script type="text/javascript">
+//correlation table
+
+$("#correlation_table").ready(function() {
+    correlation_matrix = {{correlation_matrix|tojson}}["correlation_matrix"];
+    correlation_header = {{correlation_header|tojson}}["correlation_header"];
+    correlation_table_columns = [];
+    correlation_table_width = document.getElementById("correlation_table").offsetWidth;
+    correlation_cell_width = correlation_table_width/ correlation_header.length;
+
+    cellFormatter = function(cell, formatterParams){
+        a = cell.getElement();
+        c_v = cell.getValue();
+        cell.getElement().css({"height":"100%"});
+        if (typeof(c_v) == "string"){
+              c_v = parseFloat(c_v);
+              if (c_v < -0.7 && c_v > -1){
+              cell.getElement().css({"background":"#C1CDC1"});
+              }
+              if (c_v >= -0.7 && c_v <= -0.4){
+              cell.getElement().css({"background":"#CDC1C5"});
+              }
+              if (c_v > -0.4 && c_v <= -0.15){
+              cell.getElement().css({"background":"#EEE0E5"});
+              }
+              if (c_v > -0.15 && c_v < 0){
+              cell.getElement().css({"background":"#E6E6FA"});
+              }
+
+              if (c_v > 0.7 && c_v < 1){
+              cell.getElement().css({"background":"#FFC1C1"});
+              }
+              if (c_v <= 0.7 && c_v >= 0.4){
+              cell.getElement().css({"background":"#FFDAB9"});
+              }
+              if (c_v < 0.4 && c_v >= 0.15){
+              cell.getElement().css({"background":"#FFEBCD"});
+              }
+              if (c_v < 0.15 && c_v > 0){
+              cell.getElement().css({"background":"#FFFAF0"});
+              }
+
+              return c_v;
+        }
+        else{
+               var trace2 = {
+                  x: c_v[0],
+                  y: c_v[1],
+                  mode: 'markers',
+                  type: 'scatter',
+                  marker: {
+                    size: 1
+                  }
+                     };
+               var layout2 = { autosize: false, width: correlation_cell_width, height: correlation_cell_width, margin: { l: 10, r: 10, b: 10, t: 10, pad: 10 }};
+               Plotly.plot( a[0], [trace2], layout2 ,{displayModeBar: false});
+        }
+
+
+
+    };
+     for (var i=0; i<correlation_header.length; i++){ //{ "title":"rS", "field":"rS", width:80, align:"center"},
+        var t_c = {"title": correlation_header[i], "field": correlation_header[i], "width": correlation_cell_width, align:"center"};
+
+        if (i >= 1){
+            t_c["formatter"] = cellFormatter;
+        }
+        correlation_table_columns.push(t_c);
+
+    }
+	$("#correlation_table").tabulator({
+	    data:correlation_matrix,
+	    layout:"fitColumns",
+	    columns: correlation_table_columns
+
+    });
+    $("#correlation_table").tabulator("setData", {{correlation_matrix|tojson}}["correlation_matrix"]);
+
+});
+
+
+</script>
+
+</body>
+</html>
