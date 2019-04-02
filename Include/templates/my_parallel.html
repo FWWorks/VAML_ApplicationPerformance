@@ -26,17 +26,16 @@ var parcoords = d3.parcoords()("#origin_data")
 var eigenvector = d3.parcoords()("#eigenvector")
   .alpha(0.4);
 
-var url = "../parallel_" + application_name +".csv";
-d3.csv(url, function(data) {
+parallel_data = {{parallel_data|tojson}}["parallel_data"];
     parcoords
-        .data(data)
+        .data(parallel_data)
         .hideAxis(header_eigen)
         .render()
         .interactive()
         .brushMode("1D-axes");  // enable brushing
 
     eigenvector
-        .data(data)
+        .data(parallel_data)
         .hideAxis(header_raw)
         .render()
         .interactive()
@@ -53,8 +52,6 @@ d3.csv(url, function(data) {
 
 });
 
-
-});
 </script>
 
 </body>

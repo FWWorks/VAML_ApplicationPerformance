@@ -55,8 +55,10 @@
         req.onreadystatechange = function()
         {
           if(this.readyState == 4 && this.status == 200) {
-            result.innerHTML = "OK";
-            new_correlation_matrix = JSON.parse(this.responseText)["new_correlation_matrix"]; //update correlation table
+            result.innerHTML = "";
+
+            //update correlation table
+            new_correlation_matrix = JSON.parse(this.responseText)["new_correlation_matrix"];
             new_time_series = JSON.parse(this.responseText)["time_start_end"];
             new_correlation_header = JSON.parse(this.responseText)["new_header"];
             table_parent = document.getElementById("correlation_table").parentNode;
@@ -65,6 +67,28 @@
             oDiv.setAttribute("id", "correlation_table");
             table_parent.appendChild(oDiv);
             create_correlation_table(new_correlation_matrix, new_correlation_header);
+
+            //update parallel plot
+            new_parallel_data = JSON.parse(this.responseText)["new_parallel_data"]["parallel_data"];
+            new_parallel_header = JSON.parse(this.responseText)["new_parallel_header"];
+            new_eigen_header = JSON.parse(this.responseText)["new_eigen_header"];
+            parallel_parent1 = document.getElementById("origin_data").parentNode;
+            parallel_parent1.removeChild(document.getElementById("origin_data"));
+            oDiv_1=document.createElement('div');
+            oDiv_1.setAttribute("id", "origin_data");
+            oDiv_1.setAttribute("class", "parcoords");
+            oDiv_1.setAttribute("style", "height:200px;");
+            parallel_parent1.appendChild(oDiv_1);
+
+            parallel_parent2 = document.getElementById("eigenvector").parentNode;
+            parallel_parent2.removeChild(document.getElementById("eigenvector"));
+            oDiv_2=document.createElement('div');
+            oDiv_2.setAttribute("id", "eigenvector");
+            oDiv_2.setAttribute("class", "parcoords");
+            oDiv_2.setAttribute("style", "height:200px;");
+            parallel_parent2.appendChild(oDiv_2);
+
+            create_parallel_plot(new_parallel_data, new_parallel_header, new_eigen_header)
 
 
 
@@ -218,28 +242,29 @@ $("#correlation_table").ready(function() {
 
 
 <script id="brushing">
-jQuery.support.cors = true;
-$("document").ready(function() {
-application_name = "pmd";
-parallel_url = {{parallel_url|tojson}};
-header_raw = ["BW", "MEM_BW", "switch", "cpu", "io", "memory", "network"];
-header_eigen = ["66.97%","15.16%","14.04%","3.55%","0.19%"];
-var parcoords = d3.parcoords()("#origin_data")
+header_raw = {{parallel_header|tojson}}["parallel_header"];
+header_eigen = {{eigen_header|tojson}}["eigen_header"];
+parallel_data = {{parallel_data|tojson}}["parallel_data"];
+
+create_parallel_plot(parallel_data, header_raw, header_eigen)
+
+function create_parallel_plot(parallel_data, header_raw, header_eigen){
+
+parcoords = d3.parcoords()("#origin_data")
   .alpha(0.4);
 
-var eigenvector = d3.parcoords()("#eigenvector")
+eigenvector = d3.parcoords()("#eigenvector")
   .alpha(0.4);
 
-d3.csv(parallel_url, function(data) {
     parcoords
-        .data(data)
+        .data(parallel_data)
         .hideAxis(header_eigen)
         .render()
         .interactive()
         .brushMode("1D-axes");  // enable brushing
 
     eigenvector
-        .data(data)
+        .data(parallel_data)
         .hideAxis(header_raw)
         .render()
         .interactive()
@@ -254,10 +279,8 @@ d3.csv(parallel_url, function(data) {
           }	);
 
 
-});
+}
 
-
-});
 </script>
 
 
