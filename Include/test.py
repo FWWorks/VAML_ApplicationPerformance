@@ -1,9 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 import pandas as pd
 import numpy as np
+import os
+from pca_data_prepare import *
 np.set_printoptions(suppress=True)
 import json
 app = Flask(__name__)
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+print (SITE_ROOT)
+from flask_cors import CORS
+CORS(app)
 
 short_name = {
     "DISTSIM_BENCH.host_L3_SYSTEM_BW": "L3_BW",
@@ -78,15 +84,18 @@ def linechart():
         data = data[start_time:end_time]
         data = data.reset_index()
         new_m = get_correlation_table(application_name, header, data)
-        print (new_m)
-        return rec_time + " Hello"
-
+        for m in new_m:
+            print (m)
+        respon_mess = {"new_correlation_matrix": new_m, "new_header": header2, "time_start_end": rec_time}
+        return json.dumps(respon_mess)
+    parallel_url = os.path.join(SITE_ROOT, "parallel_"+ application_name+ ".csv")
     raw_data = data
     matrix_json = get_correlation_table(application_name, header, raw_data)
     return render_template("linechart.html", latency_90={"latency_90": latency_90}, timeseries={"timeseries": timeseries},
                            application_name=application_name,#line chart
                            correlation_matrix={"correlation_matrix": matrix_json},
-                           correlation_header={"correlation_header": header2}#correlation table
+                           correlation_header={"correlation_header": header2},#correlation table
+                           parallel_url=parallel_url
 
                            )
 
@@ -130,6 +139,15 @@ def get_correlation_csv(application_name, raw_data):
     df.to_csv(target_name)
     return 0
 
+def get_parallel_data(raw_data, header, application_name): #raw_data: dataframe
+    target_name = "parallel_" + application_name + ".csv"
+    eigenvector, ratio = get_pca_data(raw_data, header)
+    df2 = raw_data.drop(["date", "DISTSIM_BENCH.benchmark_id", "L2_BW", "L3_BW", "latency", "latency90"],axis=1)
+    df1 = pd.DataFrame(eigenvector)
+    df1.columns = ratio
+    df_all = pd.concat([df1, df2], axis=1, ignore_index=False)
+    df_all.to_csv(target_name, index=None)
+    return 0
 
 if __name__ == '__main__':
     app.run()

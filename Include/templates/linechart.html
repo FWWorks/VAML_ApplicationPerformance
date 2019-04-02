@@ -9,7 +9,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
     <script src="http://tabulator.info/js/tabulator/3.5/tabulator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/examples/lib/d3.min.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.2/css/tabulator.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/examples/style.css">
 
 
 <style>
@@ -36,6 +41,11 @@
         <h4 id="result"> click me</h4>
         <div id="correlation_table" style="height:100%; width:100%;"></div>
     </div>
+
+    <div id="div2">
+         <div id="origin_data" class="parcoords" style="height:200px;"></div>
+        <div id="eigenvector" class="parcoords" style="height:200px;"></div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -45,7 +55,18 @@
         req.onreadystatechange = function()
         {
           if(this.readyState == 4 && this.status == 200) {
-            result.innerHTML = this.responseText;
+            result.innerHTML = "OK";
+            new_correlation_matrix = JSON.parse(this.responseText)["new_correlation_matrix"]; //update correlation table
+            new_time_series = JSON.parse(this.responseText)["time_start_end"];
+            new_correlation_header = JSON.parse(this.responseText)["new_header"];
+            table_parent = document.getElementById("correlation_table").parentNode;
+            table_parent.removeChild(document.getElementById("correlation_table"));
+            oDiv=document.createElement('div');
+            oDiv.setAttribute("id", "correlation_table");
+            table_parent.appendChild(oDiv);
+            create_correlation_table(new_correlation_matrix, new_correlation_header);
+
+
 
           } else {
             result.innerHTML = "処理中...";
@@ -105,15 +126,11 @@ Plotly.plot('linechart', line_chart_data, line_chart_layout, {displayModeBar: fa
 </script>
 
 <script type="text/javascript">
-//correlation table
-
-$("#correlation_table").ready(function() {
-    correlation_matrix = {{correlation_matrix|tojson}}["correlation_matrix"];
-    correlation_header = {{correlation_header|tojson}}["correlation_header"];
+function create_correlation_table(correlation_matrix, correlation_header){
     correlation_table_columns = [];
     correlation_table_width = document.getElementById("correlation_table").offsetWidth;
     correlation_cell_width = correlation_table_width/ correlation_header.length;
-
+    console.log(correlation_matrix);
     cellFormatter = function(cell, formatterParams){
         a = cell.getElement();
         c_v = cell.getValue();
@@ -180,12 +197,70 @@ $("#correlation_table").ready(function() {
 	    columns: correlation_table_columns
 
     });
-    $("#correlation_table").tabulator("setData", {{correlation_matrix|tojson}}["correlation_matrix"]);
+    $("#correlation_table").tabulator("setData", correlation_matrix);
 
+
+
+}
+</script>
+
+<script type="text/javascript">
+//correlation table
+
+$("#correlation_table").ready(function() {
+    correlation_matrix = {{correlation_matrix|tojson}}["correlation_matrix"];
+    correlation_header = {{correlation_header|tojson}}["correlation_header"];
+    create_correlation_table(correlation_matrix, correlation_header);
 });
 
 
 </script>
+
+
+<script id="brushing">
+jQuery.support.cors = true;
+$("document").ready(function() {
+application_name = "pmd";
+parallel_url = {{parallel_url|tojson}};
+header_raw = ["BW", "MEM_BW", "switch", "cpu", "io", "memory", "network"];
+header_eigen = ["66.97%","15.16%","14.04%","3.55%","0.19%"];
+var parcoords = d3.parcoords()("#origin_data")
+  .alpha(0.4);
+
+var eigenvector = d3.parcoords()("#eigenvector")
+  .alpha(0.4);
+
+d3.csv(parallel_url, function(data) {
+    parcoords
+        .data(data)
+        .hideAxis(header_eigen)
+        .render()
+        .interactive()
+        .brushMode("1D-axes");  // enable brushing
+
+    eigenvector
+        .data(data)
+        .hideAxis(header_raw)
+        .render()
+        .interactive()
+        .brushMode("1D-axes");  // enable brushing
+
+    parcoords.on("brush", function(d) {
+	  eigenvector.highlight(d);
+          }	);
+
+    eigenvector.on("brush", function(d) {
+		parcoords.highlight(d);
+          }	);
+
+
+});
+
+
+});
+</script>
+
+
 
 </body>
 </html>
