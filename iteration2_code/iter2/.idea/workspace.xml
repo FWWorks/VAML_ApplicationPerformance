@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7cd079b9-67a9-4404-a7d2-c68b012826f6" name="Default Changelist" comment="" />
+    <list default="true" id="7cd079b9-67a9-4404-a7d2-c68b012826f6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Include/correlation_pmd.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../../Include/correlation_pmd.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Include/parallel_pmd.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../../Include/parallel_pmd.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Include/templates/linechart.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../Include/templates/linechart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,23 +17,24 @@
     <session id="123574791">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.open.time.8" value="1" />
+          <entry key="project.opened" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="csv" value="3" />
-          <entry key="html" value="2" />
+          <entry key="html" value="3" />
           <entry key="py" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="2" />
+          <entry key="HTML" value="3" />
           <entry key="PLAIN_TEXT" value="3" />
           <entry key="Python" value="4" />
         </counts>
@@ -37,11 +43,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/venv/Include/templates/timeseries_view.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-133">
-              <caret line="11" column="102" lean-forward="true" selection-start-line="5" selection-end-line="11" selection-end-column="102" />
+            <state relative-caret-position="228">
+              <caret line="87" selection-start-line="87" selection-end-line="87" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -54,8 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/venv/Include/PCA.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-285">
-              <caret line="18" column="31" lean-forward="true" selection-start-line="14" selection-end-line="18" selection-end-column="31" />
+            <state relative-caret-position="304">
+              <caret line="18" column="31" selection-start-line="14" selection-end-line="18" selection-end-column="31" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -71,17 +77,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/venv/Include/data_preparation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+            <state relative-caret-position="266">
+              <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/venv/Include/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="119" column="86" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="86" />
+            <state relative-caret-position="133">
+              <caret line="118" column="87" lean-forward="true" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="86" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -97,7 +103,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/venv/Include/tmp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-125">
+            <state>
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -129,6 +135,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -158,7 +165,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -227,7 +233,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32840723" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32840723" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -245,60 +251,63 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/venv/Include/projection_redis.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/tmp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-125">
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/data_preparation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/projection_hmmer.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/projection.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/templates/Untitled-1.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2890" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/projection_redis.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/PCA.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-285">
-          <caret line="18" column="31" lean-forward="true" selection-start-line="14" selection-end-line="18" selection-end-column="31" />
+        <state relative-caret-position="304">
+          <caret line="18" column="31" selection-start-line="14" selection-end-line="18" selection-end-column="31" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Include/templates/timeseries_view.html">
+    <entry file="file://$PROJECT_DIR$/venv/Include/projection.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/data_preparation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-133">
-          <caret line="11" column="102" lean-forward="true" selection-start-line="5" selection-end-line="11" selection-end-column="102" />
+        <state relative-caret-position="266">
+          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/projection_hmmer.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/tmp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/helloworld.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Include/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="119" column="86" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="86" />
+        <state relative-caret-position="133">
+          <caret line="118" column="87" lean-forward="true" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="86" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Include/templates/timeseries_view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="87" selection-start-line="87" selection-end-line="87" selection-end-column="15" />
         </state>
       </provider>
     </entry>
