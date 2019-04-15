@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+    <script src="http://tabulator.info/js/tabulator/3.5/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/examples/lib/d3.min.js"></script>
+    <script src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
+    <script src = "http://mostapharoudsari.github.io/honeybee/pc_source_files/d3/d3.parcoords.js"></script>
+
+    <link rel="icon" href="data:,">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.2/css/tabulator.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
+    <link rel="stylesheet" type="text/css" href="http://mostapharoudsari.github.io/honeybee/pc_source_files/css/d3.parcoords.css">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/examples/style.css">
+
+
+<style>
+.center {
+   display: -webkit-flex;
+   -webkit-justify-content: center;
+   -webkit-align-items: center;
+  }
+
+.plotly-notifier{
+  visibility: hidden;
+}
+.tabulator-cell{height:100px; background-color: white}
+
+#div0{
+    width: 100%;height: 100%;
+    }
+#div1{
+	width: 50%;height: 100%;float: left;
+	}
+#div2{
+	width: 50%;height: 100%;float: right;
+	}
+</style>
+</head>
+<body>
+<div id="div0">
+    <div id="div1">
+        <div id="linechart" method="post"></div>
+        <div id="table_title" class="center" style="font-size:16px">Correlation view</div>
+        <br>
+        <div id="correlation_table" style="height:100%; width:100%;"></div>
+
+    </div>
+
+    <div id="div2">
+        <div>
+            <div id="origin_data_title" class="center" style="font-size:16px">Data view</div>
+            <br>
+             <div id="origin_data" class="parcoords" style="height:200px;"></div>
+        </div>
+        <br>
+        <div>
+            <div id="eigenvector_title" class="center" style="font-size:16px">Eigenvector view</div>
+            <br>
+            <div id="eigenvector" class="parcoords" style="height:200px;"></div>
+        </div>
+        <div id="scatter_plot" ></div>
+    </div>
+</div>
+
+<script>
+projection_layout = {
+              title: {
+                text:'Projection view',
+                font: {
+                  size: 16
+                }
+              },
+              xaxis: {
+                title: {
+                  text: 'PC1',
+                  font: {
+                    size: 16
+                  }
+                },
+              },
+              yaxis: {
+                title: {
+                  text: 'PC2',
+                  font: {
+                    size: 16
+                  }
+                }
+              }
+        };
+
+</script>
+<script type="text/javascript">
+      function do_ajax2() {
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function()
+        {
+          if(this.readyState == 4 && this.status == 200) {
+
+            //update correlation table
+            new_correlation_matrix = JSON.parse(this.responseText)["new_correlation_matrix"];
+            new_time_series = JSON.parse(this.responseText)["time_start_end"];
+            new_correlation_header = JSON.parse(this.responseText)["new_header"];
+            table_parent = document.getElementById("correlation_table").parentNode;
+            table_parent.removeChild(document.getElementById("correlation_table"));
+            oDiv=document.createElement('div');
+            oDiv.setAttribute("id", "correlation_table");
+            table_parent.appendChild(oDiv);
+            create_correlation_table(new_correlation_matrix, new_correlation_header);
+
+            //update parallel plot
+            new_parallel_data = JSON.parse(this.responseText)["new_parallel_data"]["parallel_data"];
+            new_parallel_header = JSON.parse(this.responseText)["new_parallel_header"];
+            new_eigen_header = JSON.parse(this.responseText)["new_eigen_header"];
+            parallel_parent1 = document.getElementById("origin_data").parentNode;
+            parallel_parent1.removeChild(document.getElementById("origin_data"));
+            oDiv_1=document.createElement('div');
+            oDiv_1.setAttribute("id", "origin_data");
+            oDiv_1.setAttribute("class", "parcoords");
+            oDiv_1.setAttribute("style", "height:200px;");
+            parallel_parent1.appendChild(oDiv_1);
+
+            parallel_parent2 = document.getElementById("eigenvector").parentNode;
+            parallel_parent2.removeChild(document.getElementById("eigenvector"));
+            oDiv_2=document.createElement('div');
+            oDiv_2.setAttribute("id", "eigenvector");
+            oDiv_2.setAttribute("class", "parcoords");
+            oDiv_2.setAttribute("style", "height:200px;");
+            parallel_parent2.appendChild(oDiv_2);
+
+            // update pcs 2-D scatter plot
+            scatter_parent = document.getElementById("scatter_plot").parentNode;
+            scatter_parent.removeChild(document.getElementById("scatter_plot"));
+            oDiv_3=document.createElement('div');
+            oDiv_3.setAttribute("id", "scatter_plot");
+            scatter_parent.appendChild(oDiv_3);
+
+            create_parallel_plot(new_parallel_data, new_parallel_header, new_eigen_header)
+
+
+
+          } else {
+            //result.innerHTML = "処理中...";
+          }
+        }
+        req.open('POST', '/linechart', true);
+        req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        req.send("time=" + selected_time_range1_start + "," + selected_time_range1_end);
+      }
+    </script>
+
+
+
+<script>
+//line chart
+var application_name = {{application_name|tojson}};
+timeseries = {{timeseries|tojson}}["timeseries"];
+var line_chart_data = [{
+                mode: 'lines',
+                x: {{timeseries|tojson}}["timeseries"],
+                y: {{latency_90|tojson}}["latency_90"],
+                name: "latency_90"
+                     }];
+var line_chart_layout = {
+                title: application_name + ' Latency90',
+                dragmode: 'select',
+                xaxis: {
+                    title:{
+                    text: 'time'
+                    },
+                },
+                yaxis: {
+                     title:{
+                        text: 'latency90'
+                        },
+                    fixedrange: true
+                }
+                        };
+
+Plotly.plot('linechart', line_chart_data, line_chart_layout, {displayModeBar: false});
+var linechart = document.getElementById('linechart');
+range_index = 0;
+select_x_1 = [];
+select_x_2 = [];
+common_x = [];
+linechart.on('plotly_selecting', (eventData) => {
+    Plotly.d3.selectAll('.select-line,.select-outline-1,.select-outline-2')
+             .style('stroke-opacity','1.0')
+             .style('stroke-width','1');
+    });
+
+linechart.on('plotly_selected', function(eventData) {
+    if (typeof(eventData) != "undefined" ){
+        range_index += 1;
+        var select_range =  eventData.range.x;//start point and end point
+        if (range_index == 1){
+                select_x_1 = select_range;
+             }
+        else if (range_index == 2){
+                select_x_2 = select_range;
+         }
+
+    layout_range_1 = shadow_selection(select_x_1, '#7AC5CD');
+    Plotly.d3.selectAll('.select-line,.select-outline-1,.select-outline-2')
+             .style('stroke-opacity','0.0')
+             .style('stroke-width','0');
+    if (range_index == 1){
+        Plotly.relayout(linechart, layout_range_1);
+    }
+   else if (range_index == 2){
+        var select_x_1_index = [timeseries.indexOf(select_x_1[0]), timeseries.indexOf(select_x_1[1])];
+        var select_x_2_index = [timeseries.indexOf(select_x_2[0]), timeseries.indexOf(select_x_2[1])];
+        var tmp1 = [];
+        var tmp2 = [];
+        for (var i=0; i<timeseries.length; i++){
+            if (i >= select_x_1_index[0] && i <= select_x_1_index[1]){
+                tmp1.push(i);
+            }
+            if (i >= select_x_2_index[0] && i <= select_x_2_index[1]){
+                tmp2.push(i);
+            }
+        }
+        common_x = tmp1.filter(value => -1 !== tmp2.indexOf(value));//get the common part of selection
+
+        function sortNumber(a,b){
+            return a - b
+            }
+        if (common_x.length > 0){
+            common_x = common_x.sort(sortNumber);
+            common_x = [timeseries[common_x[0]], timeseries[common_x[common_x.length - 1]]];
+            layout_range_common = shadow_selection(common_x, '#008B00');
+         }
+        layout_range_2 = shadow_selection(select_x_2, '#FF6A6A');
+        if (common_x.length > 0){
+            layout_range_2["shapes"].push(layout_range_common["shapes"][0]);
+         }
+        layout_range_2["shapes"].push(layout_range_1["shapes"][0]);
+        Plotly.relayout(linechart, layout_range_2);
+   }
+
+   selected_time_range1_start = select_x_1[0];
+   selected_time_range1_end = select_x_1[1];
+   selected_time_range2_start = select_x_2[0];
+   selected_time_range2_end = select_x_2[1];
+   selected_time_range_common_start = common_x[0];
+   selected_time_range_common_end = common_x[1];
+   do_ajax2();
+ }
+
+else{ // cancel selection
+    range_index = 0;
+    layout_cancel_select = shadow_selection([0, 0], '#FFEBCD')
+    layout_cancel_select["shapes"][0]["opacity"] = 0;
+    select_x_1 = [];
+    select_x_2 = [];
+    common_x = [];
+    Plotly.relayout(linechart, layout_cancel_select);
+    selected_time_range1_start = timeseries[0];
+    selected_time_range1_end = timeseries[timeseries.length - 1];
+    do_ajax2();
+}
+ });
+
+
+function shadow_selection(select_xaxis, color){
+     var layout_shadow = {
+         shapes: [
+                    {
+                        type: 'rect',
+                        xref: 'x',
+                        yref: 'paper',
+                        x0: select_xaxis[0],
+                        y0: 0,
+                        x1: select_xaxis[select_xaxis.length - 1],
+                        y1: 1,
+                        fillcolor: color,
+                        opacity: 0.2,
+                        line: {
+                            width: 0
+                        }
+                    }
+                ]
+     };
+    return layout_shadow;
+}
+
+
+</script>
+
+<script type="text/javascript">
+function create_correlation_table(correlation_matrix, correlation_header){
+    correlation_table_columns = [];
+    correlation_table_width = document.getElementById("correlation_table").offsetWidth;
+    correlation_cell_width = correlation_table_width/ correlation_header.length;
+    console.log(correlation_matrix);
+    cellFormatter = function(cell, formatterParams){
+        a = cell.getElement();
+        c_v = cell.getValue();
+        cell.getElement().css({"height":"100%"});
+        if (typeof(c_v) == "string"){
+              c_v = parseFloat(c_v);
+              if (c_v < -0.7 && c_v > -1){
+              cell.getElement().css({"background":"#C1CDC1"});
+              }
+              if (c_v >= -0.7 && c_v <= -0.4){
+              cell.getElement().css({"background":"#CDC1C5"});
+              }
+              if (c_v > -0.4 && c_v <= -0.15){
+              cell.getElement().css({"background":"#EEE0E5"});
+              }
+              if (c_v > -0.15 && c_v < 0){
+              cell.getElement().css({"background":"#E6E6FA"});
+              }
+
+              if (c_v > 0.7 && c_v < 1){
+              cell.getElement().css({"background":"#FFC1C1"});
+              }
+              if (c_v <= 0.7 && c_v >= 0.4){
+              cell.getElement().css({"background":"#FFDAB9"});
+              }
+              if (c_v < 0.4 && c_v >= 0.15){
+              cell.getElement().css({"background":"#FFEBCD"});
+              }
+              if (c_v < 0.15 && c_v > 0){
+              cell.getElement().css({"background":"#FFFAF0"});
+              }
+
+              return c_v;
+        }
+        else{
+               var trace2 = {
+                  x: c_v[0],
+                  y: c_v[1],
+                  mode: 'markers',
+                  type: 'scatter',
+                  marker: {
+                    size: 1
+                  }
+                     };
+               var layout2 = { autosize: false, width: correlation_cell_width, height: correlation_cell_width, margin: { l: 10, r: 10, b: 10, t: 10, pad: 10 }};
+               Plotly.plot( a[0], [trace2], layout2 ,{displayModeBar: false});
+        }
+
+
+
+    };
+     for (var i=0; i<correlation_header.length; i++){ //{ "title":"rS", "field":"rS", width:80, align:"center"},
+        var t_c = {"title": correlation_header[i], "field": correlation_header[i], "width": correlation_cell_width, align:"center"};
+
+        if (i >= 1){
+            t_c["formatter"] = cellFormatter;
+        }
+        correlation_table_columns.push(t_c);
+
+    }
+	$("#correlation_table").tabulator({
+	    data:correlation_matrix,
+	    layout:"fitColumns",
+	    columns: correlation_table_columns
+
+    });
+    $("#correlation_table").tabulator("setData", correlation_matrix);
+
+
+
+}
+</script>
+
+<script type="text/javascript">
+//correlation table
+
+$("#correlation_table").ready(function() {
+    correlation_matrix = {{correlation_matrix|tojson}}["correlation_matrix"];
+    correlation_header = {{correlation_header|tojson}}["correlation_header"];
+    create_correlation_table(correlation_matrix, correlation_header);
+});
+
+
+</script>
+
+
+<script id="brushing">
+header_raw = {{parallel_header|tojson}}["parallel_header"];
+header_eigen = {{eigen_header|tojson}}["eigen_header"];
+parallel_data = {{parallel_data|tojson}}["parallel_data"];
+
+create_parallel_plot(parallel_data, header_raw, header_eigen)
+
+function create_parallel_plot(parallel_data, header_raw, header_eigen){
+
+blue_to_brown = d3.scale.linear()
+  .domain([0.2, 0.55])
+  //.range(["steelblue", "brown"])
+  .range(["grey", "red"])
+  .interpolate(d3.interpolateLab);
+
+color = function(d) { return blue_to_brown(d['latency90']); };
+
+parcoords = d3.parcoords()("#origin_data")
+  .color(color)
+  .alpha(0.4);
+
+eigenvector = d3.parcoords()("#eigenvector")
+  .color(color)
+  .alpha(0.4);
+
+    parcoords
+        .data(parallel_data)
+        .hideAxis(header_eigen.concat(["latency90", "id"]))
+        .render()
+        .interactive()
+        .brushMode("1D-axes");  // enable brushing
+
+    eigenvector
+        .data(parallel_data)
+        .hideAxis(header_raw.concat(["latency90", "id"]))
+        .render()
+        .interactive()
+        .brushMode("1D-axes");  // enable brushing
+
+    parcoords.ctx.highlight.lineWidth=1
+    eigenvector.ctx.highlight.lineWidth=1
+
+    parallel_selection_data = [];
+
+
+    //add click outlier event
+    d3.select("#origin_data svg")
+        .on("click", function() {
+            var mousePosition = d3.mouse(this);
+            c_d = highlightLineOnClick(mousePosition, parcoords);
+            if (c_d.length > 0){
+                eigenvector.highlight(c_d);
+                restyle_scatter_plot('scatter_plot', c_d, parallel_data);
+            }else{
+                eigenvector.highlight(parcoords.brushed());
+            }
+        })
+        .on("dblclick", function(){
+            parcoords.unhighlight();
+            eigenvector.unhighlight();
+            init_scatter_plot();
+          });
+
+    d3.select("#eigenvector svg")
+        .on("click", function() {
+            var mousePosition = d3.mouse(this);
+            c_d_e = highlightLineOnClick(mousePosition, eigenvector);
+            if (c_d_e.length > 0){
+                parcoords.highlight(c_d_e);
+                restyle_scatter_plot('scatter_plot', c_d_e, parallel_data);
+            }else{
+                parcoords.highlight(eigenvector.brushed());
+            }
+        })
+        .on("dblclick", function(){
+            eigenvector.unhighlight();
+            parcoords.unhighlight();
+            init_scatter_plot();
+          });
+
+    parcoords.on("brush", function(d) {
+      eigenvector.highlight(d);
+	  parcoords.unhighlight();
+	  parallel_selection_data = d;
+	  restyle_scatter_plot('scatter_plot', parallel_selection_data, parallel_data);
+          }	);
+
+    eigenvector.on("brush", function(d) {
+		parcoords.highlight(d);
+		eigenvector.unhighlight();
+		parallel_selection_data = d;
+		restyle_scatter_plot('scatter_plot', parallel_selection_data, parallel_data);
+          }	);
+
+    function init_scatter_plot(){
+         // pca 2-D projection scatter plot
+        pc1_name = header_eigen[0];
+        pc2_name = header_eigen[1];
+        pc1_data = [];
+        pc2_data = [];
+        color_value = [];
+        for (var i=0; i<parallel_data.length; i++){
+            pc1_data.push(parallel_data[i][pc1_name]);
+            pc2_data.push(parallel_data[i][pc2_name]);
+            color_value.push(parallel_data[i]["latency90"]);
+                }
+        console.log(pc1_data);
+        var projection_trace = {
+              x: pc1_data,
+              y: pc2_data,
+              mode: 'markers',
+              type: 'scatter',
+              marker: {
+
+                 color: color_value
+              }
+            };
+        var projection_data = [projection_trace];
+
+        Plotly.newPlot('scatter_plot', projection_data, projection_layout, {displayModeBar: false});
+    }
+
+    init_scatter_plot();
+
+}
+
+</script>
+
+<script>
+function restyle_scatter_plot(plot_name, data_selected, projection_data){
+    projection_data_selected = [];
+    projection_data_not_selected = [];
+    seleted_id_list = [];
+    //get selected_id
+    for(var i=0; i<data_selected.length; i++){
+         seleted_id_list.push(data_selected[i]["id"]);
+    }
+    pc1_selected = [];
+    pc2_selected = [];
+    pc1_not_selected = [];
+    pc2_not_selected = [];
+    for (var i=0; i<projection_data.length; i++){
+        if (seleted_id_list.indexOf(projection_data[i]["id"]) != -1){
+            projection_data_selected.push(projection_data[i]);
+            pc1_selected.push(projection_data[i][pc1_name]);
+            pc2_selected.push(projection_data[i][pc2_name]);
+        } else{
+            projection_data_not_selected.push(projection_data[i]);
+            pc1_not_selected.push(projection_data[i][pc1_name]);
+            pc2_not_selected.push(projection_data[i][pc2_name]);
+        }
+    }
+    var selected_trace = {
+          x: pc1_selected,
+          y: pc2_selected,
+          mode: 'markers',
+          type: 'scatter',
+          name: 'selected',
+          marker: {
+             color: color_value
+          }
+        };
+
+    var not_selected_trace = {
+          x: pc1_not_selected,
+          y: pc2_not_selected,
+          mode: 'markers',
+          type: 'scatter',
+          opacity: 0.3,
+          name: 'not selected',
+          marker: {
+             colorscale: "Greys",
+             color: color_value
+          }
+        };
+    Plotly.newPlot(plot_name, [selected_trace, not_selected_trace], projection_layout, {displayModeBar: false});
+
+
+}
+
+
+
+</script>
+
+<script>
+// Add highlight for every line on click
+function getCentroids(data, graph){
+	var margins = parcoords.margin();
+	var graphCentPts = [];
+
+	data.forEach(function(d){
+
+		var initCenPts = graph.compute_centroids(d).filter(function(d, i){return i%2==0;});
+
+		// move points based on margins
+		var cenPts = initCenPts.map(function(d){
+			return [d[0] + margins["left"], d[1]+ margins["top"]];
+		});
+
+		graphCentPts.push(cenPts);
+	});
+
+	return graphCentPts;
+}
+
+function getActiveData(graph){
+	// I'm pretty sure this data is already somewhere in graph
+	if (graph.brushed()!=false) return graph.brushed();
+	return graph.data();
+}
+
+function isOnLine(startPt, endPt, testPt, tol){
+	// check if test point is close enough to a line
+	// between startPt and endPt. close enough means smaller than tolerance
+	var x0 = testPt[0];
+	var	y0 = testPt[1];
+	var x1 = startPt[0];
+	var	y1 = startPt[1];
+	var x2 = endPt[0];
+	var	y2 = endPt[1];
+	var Dx = x2 - x1;
+	var Dy = y2 - y1;
+	var delta = Math.abs(Dy*x0 - Dx*y0 - x1*y2+x2*y1)/Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
+	//console.log(delta);
+	if (delta <= tol) return true;
+	return false;
+}
+
+function findAxes(testPt, cenPts){
+	// finds between which two axis the mouse is
+	var x = testPt[0];
+	var y = testPt[1];
+
+	// make sure it is inside the range of x
+	if (cenPts[0][0] > x) return false;
+	if (cenPts[cenPts.length-1][0] < x) return false;
+
+	// find between which segment the point is
+	for (var i=0; i<cenPts.length; i++){
+		if (cenPts[i][0] > x) return i;
+	}
+}
+
+
+function getClickedLines(mouseClick, graph){
+    var clicked = [];
+    var clickedCenPts = [];
+
+	// find which data is activated right now
+	var activeData = getActiveData(graph);
+
+	// find centriod points
+	var graphCentPts = getCentroids(activeData, graph);
+
+    if (graphCentPts.length==0) return false;
+
+	// find between which axes the point is
+    var axeNum = findAxes(mouseClick, graphCentPts[0]);
+    if (!axeNum) return false;
+
+    graphCentPts.forEach(function(d, i){
+	    if (isOnLine(d[axeNum-1], d[axeNum], mouseClick, 2)){
+	    	clicked.push(activeData[i]);
+	    }
+	});
+
+	return [clicked];
+}
+
+
+function highlightLineOnClick(mouseClick, graph){
+
+	clicked = [];
+	clickedData = getClickedLines(mouseClick, graph);
+	console.log(clickedData.length);
+
+	if (clickedData && clickedData[0].length!=0){
+		clicked = clickedData[0];
+		console.log(clicked);
+	    // highlight clicked line
+	    graph.highlight(clicked);
+
+	}
+	return clicked;
+};
+
+
+</script>
+</body>
+</html>
