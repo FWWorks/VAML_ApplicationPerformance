@@ -68,7 +68,11 @@
 </div>
 
 <script>
-
+steelB_Brown = [
+                 [0, 'rgb(123,108,138)'], [0.35, 'rgb(124,111,140)'],
+                 [0.5, 'rgb(130,103,127)'], [0.6, 'rgb(143,113,134)'],
+                 [0.7, 'rgb(140,102,121)'], [1, 'rgb(145,90,104)']
+                ];
 projection_layout = {
               title: {
                 text:'Projection view',
@@ -531,39 +535,40 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
 		restyle_scatter_plot('scatter_plot', parallel_selection_data, parallel_data);
           }	);
 
-    function divide_data_range(){
+    function divide_data_range(raw_data){
         scatter_range_all = [];
         scatter_range_1 = [];
         scatter_range_2 = [];
         scatter_range_common = [];
-        for (var i=0; i<parallel_data.length; i++){
-            switch(parallel_data[i]["range"])
+        for (var i=0; i<raw_data.length; i++){
+            switch(raw_data[i]["range"])
             {
                 case "all":
-                    scatter_range_all.push(parallel_data[i]);
+                    scatter_range_all.push(raw_data[i]);
                     break;
                 case "range1":
-                    scatter_range_1.push(parallel_data[i]);
+                    scatter_range_1.push(raw_data[i]);
                     break;
                 case "range2":
-                    scatter_range_2.push(parallel_data[i]);
+                    scatter_range_2.push(raw_data[i]);
                     break;
                 case "common_range":
-                    scatter_range_common.push(parallel_data[i]);
+                    scatter_range_common.push(raw_data[i]);
                     break;
                 default:
-                    scatter_range_all.push(parallel_data[i]);
+                    scatter_range_all.push(raw_data[i]);
                     break;
             }
           }
         }
 
-    function get_projection_trace(pc1_name, pc2_name){
-        divide_data_range()
+    function get_projection_trace(raw_data){
+        divide_data_range(raw_data)
         range_names = ["all", "range1", "range2", "common_range"];
         scatter_ranges = {"all":scatter_range_all, "range1": scatter_range_1, "range2": scatter_range_2, "common_range": scatter_range_common};
-        scatter_colorscale = {"all":'Reds', "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
+        scatter_colorscale = {"all":steelB_Brown, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
         scatter_traces = [];
+        color_value_all = {};
         for (var i=0; i<range_names.length; i++){
             var scatter_range_data = scatter_ranges[range_names[i]];
             var pc1_data = [];
@@ -574,11 +579,13 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
                 pc2_data.push(scatter_range_data[j][pc2_name]);
                 color_value.push(scatter_range_data[j]["latency90"]);
                 }
+            color_value_all[range_names[i]] = color_value;
             var projection_trace = {
                 x: pc1_data,
                 y: pc2_data,
                 mode: 'markers',
                 type: 'scatter',
+                name: range_names[i],
                 marker: {
                    colorscale: scatter_colorscale[range_names[i]],
                    color: color_value
@@ -592,7 +599,7 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
         // pca 2-D projection scatter plot
         pc1_name = header_eigen[0];
         pc2_name = header_eigen[1];
-        var projection_data = get_projection_trace(pc1_name, pc2_name);
+        var projection_data = get_projection_trace(parallel_data);
 
         Plotly.newPlot('scatter_plot', projection_data, projection_layout, {displayModeBar: false});
     }
@@ -604,7 +611,17 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
 </script>
 
 <script>
+function get_restyle_traces(projection_data_selected, projection_data_not_selected){
+
+
+
+}
 function restyle_scatter_plot(plot_name, data_selected, projection_data){
+console.log("data_selected");
+console.log(data_selected);
+console.log("projection_data");
+console.log(projection_data);
+
     projection_data_selected = [];
     projection_data_not_selected = [];
     seleted_id_list = [];
@@ -627,6 +644,10 @@ function restyle_scatter_plot(plot_name, data_selected, projection_data){
             pc2_not_selected.push(projection_data[i][pc2_name]);
         }
     }
+    console.log("projection_data_selected");
+    console.log(projection_data_selected);
+    console.log("projection_data_not_selected");
+    console.log(projection_data_not_selected);
     var selected_trace = {
           x: pc1_selected,
           y: pc2_selected,
@@ -634,7 +655,7 @@ function restyle_scatter_plot(plot_name, data_selected, projection_data){
           type: 'scatter',
           name: 'selected',
           marker: {
-             color: color_value
+             color: color_value_all["all"]
           }
         };
 
@@ -647,15 +668,87 @@ function restyle_scatter_plot(plot_name, data_selected, projection_data){
           name: 'not selected',
           marker: {
              colorscale: "Greys",
-             color: color_value
+             color: color_value_all["range1"]
           }
         };
-    Plotly.newPlot(plot_name, [selected_trace, not_selected_trace], projection_layout, {displayModeBar: false});
 
+    a = get_projection_trace(projection_data_selected, "yes");
+    b = get_projection_trace(projection_data_not_selected, "no");
+    //Plotly.newPlot(plot_name, [selected_trace, not_selected_trace], projection_layout, {displayModeBar: false});
+    Plotly.newPlot(plot_name, b.concat(a), projection_layout, {displayModeBar: false});
 
 }
 
+function divide_data_range(raw_data){
+        scatter_range_all = [];
+        scatter_range_1 = [];
+        scatter_range_2 = [];
+        scatter_range_common = [];
+        for (var i=0; i<raw_data.length; i++){
+            switch(raw_data[i]["range"])
+            {
+                case "all":
+                    scatter_range_all.push(raw_data[i]);
+                    break;
+                case "range1":
+                    scatter_range_1.push(raw_data[i]);
+                    break;
+                case "range2":
+                    scatter_range_2.push(raw_data[i]);
+                    break;
+                case "common_range":
+                    scatter_range_common.push(raw_data[i]);
+                    break;
+                default:
+                    scatter_range_all.push(raw_data[i]);
+                    break;
+            }
+          }
+        }
 
+    function get_projection_trace(raw_data, select_or_not){
+        divide_data_range(raw_data);
+        range_names = ["all", "range1", "range2", "common_range"];
+        scatter_ranges = {"all":scatter_range_all, "range1": scatter_range_1, "range2": scatter_range_2, "common_range": scatter_range_common};
+        scatter_colorscale = {"all":steelB_Brown, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
+        scatter_traces = [];
+        for (var i=0; i<range_names.length; i++){
+            var scatter_range_data = scatter_ranges[range_names[i]];
+            var pc1_data = [];
+            var pc2_data = [];
+            var color_value = [];
+            for (var j=0; j<scatter_range_data.length; j++){
+                pc1_data.push(scatter_range_data[j][pc1_name]);
+                pc2_data.push(scatter_range_data[j][pc2_name]);
+                color_value.push(scatter_range_data[j]["latency90"]);
+                }
+
+            var projection_trace = {
+                x: pc1_data,
+                y: pc2_data,
+                mode: 'markers',
+                type: 'scatter',
+                showlegend: false,
+                marker: {
+                   colorscale: scatter_colorscale[range_names[i]],
+                   color: color_value
+                     }
+                  };
+            if(select_or_not == "no"){
+                projection_trace['opacity'] = 0.2;
+            }
+            if (raw_data.length == 1){
+                if (range_names[i] == "all"){
+                    projection_trace["marker"] = {color: 'rgb(143,113,134)' };
+                }else{
+                    projection_trace["marker"] = {color: scatter_colorscale[range_names[i]].slice(0, -1) };
+                }
+
+            }
+            scatter_traces.push(projection_trace);
+             }
+       return scatter_traces
+    }
 
 </script>
 
