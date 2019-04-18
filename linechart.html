@@ -10,6 +10,7 @@
     <script src="http://tabulator.info/js/tabulator/3.5/tabulator.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
     <script src="https://syntagmatic.github.io/parallel-coordinates/examples/lib/d3.min.js"></script>
+    <script src="http://benschmidt.org/colorbar/colorbar.js"></script>
     <script src="https://fwworks.github.io/test_COR/parcoords.js"></script>
 
     <link rel="icon" href="data:,">
@@ -19,6 +20,13 @@
     <link rel="stylesheet" type="text/css" href="http://mostapharoudsari.github.io/honeybee/pc_source_files/css/d3.parcoords.css">
 
 <style>
+.axis path,
+.axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+
 .center {
    display: -webkit-flex;
    -webkit-justify-content: center;
@@ -37,8 +45,14 @@
 	width: 50%;height: 100%;float: left;
 	}
 #div2{
-	width: 50%;height: 100%;float: right;
+	width: 47%;height: 100%;float: left;
 	}
+#div3{
+	width: 3%;height: 100%;float: right;
+	}
+#colorbar{
+    position:fixed;
+}
 </style>
 </head>
 <body>
@@ -50,20 +64,22 @@
         <div id="correlation_table" style="height:100%; width:100%;"></div>
 
     </div>
-
     <div id="div2">
-        <div>
-            <div id="origin_data_title" class="center" style="font-size:16px">Data view</div>
+            <div>
+                <div id="origin_data_title" class="center" style="font-size:16px">Data view</div>
+                <br>
+                 <div id="origin_data" class="parcoords" style="height:200px;"></div>
+            </div>
             <br>
-             <div id="origin_data" class="parcoords" style="height:200px;"></div>
-        </div>
-        <br>
-        <div>
-            <div id="eigenvector_title" class="center" style="font-size:16px">Eigenvector view</div>
-            <br>
-            <div id="eigenvector" class="parcoords" style="height:200px;"></div>
-        </div>
-        <div id="scatter_plot" ></div>
+            <div>
+                <div id="eigenvector_title" class="center" style="font-size:16px">Eigenvector view</div>
+                <br>
+                <div id="eigenvector" class="parcoords" style="height:200px;"></div>
+            </div>
+            <div id="scatter_plot" ></div>
+    </div>
+    <div id="div3">
+        <div id="colorbar">1</div>
     </div>
 </div>
 
@@ -222,8 +238,10 @@ function line_chart_selection(){
                  .style('stroke-opacity','0.0')
                  .style('stroke-width','0');
         if (range_index == 1){
+            line_chart_layout_previous_status = layout_range_1;
             Plotly.relayout(linechart, layout_range_1);
             all_select_range = select_x_1;
+            //line_chart_layout_previous_status = all_select_range;
         }
        else if (range_index == 2){
             var select_x_1_index = [timeseries.indexOf(select_x_1[0]), timeseries.indexOf(select_x_1[1])];
@@ -312,8 +330,10 @@ function update_linechart(c_d){
     }else{
         var line_chart_y = new Array(line_chart_data_previous_status.length).fill(null);
         for (var i=0; i<c_d.length; i++){
-            var d_id = c_d[i]['id'];
-            line_chart_y[d_id] = line_chart_data[0]["y"][d_id];
+            var t_1 = c_d[i]['date'].split(" ")[1];
+            var d_date = t_1.split(".")[0];
+            var d_index =line_chart_data[0]["x"].indexOf(d_date);
+            line_chart_y[d_index] = line_chart_data[0]["y"][d_index];
              }
 
         var new_line_chart_trace = {
@@ -321,13 +341,17 @@ function update_linechart(c_d){
                                 x: timeseries,
                                 y: line_chart_y,
                                 name: 'selected',
+                                mode: 'lines+markers',
                                 marker: {
+                                    size: 5,
                                     color: '#1f77b4',
                                          }
                                   };
         console.log(new_line_chart_trace);
         var old_line_chart_data = JSON.parse(JSON.stringify(initial_line_chart_data));
         old_line_chart_data[0]['opacity'] = 0.5;
+        console.log("line_chart_layout_previous_status");
+        console.log(line_chart_layout_previous_status);
         Plotly.newPlot('linechart', [old_line_chart_data[0], new_line_chart_trace], line_chart_layout_previous_status, {displayModeBar: false});
     }
 }
@@ -335,6 +359,7 @@ function update_linechart(c_d){
 function recover_linechart(){
     Plotly.newPlot('linechart', initial_line_chart_data, initial_line_chart_layout, {displayModeBar: false});
     line_chart_selection();
+    //line_chart_layout_previous_status = [];
     //Plotly.newPlot('linechart', initial_line_chart_data, initial_line_chart_layout, {displayModeBar: false});
 }
 function recover_linechart2(){
@@ -481,14 +506,25 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
     function get_color(range_x){
         c_scale = get_color_scale(range_x);
         gradient_color = d3.scale.linear()
-        .domain([0.2, 0.55])
-        .range(c_scale)
-        .interpolate(d3.interpolateLab)
+                            .domain([0.2, 0.55])
+                            .range(c_scale)
+                            .interpolate(d3.interpolateLab)
         return 0
     }
     color = function(d) {
         get_color(d['range']);
         return gradient_color(d['latency90']);};
+
+    myScale = d3.scale.linear().range(["red","white","blue"]).domain([0,4,8]);
+
+    colorbar = Colorbar()
+        .thickness(10)
+        .scale(myScale)
+        .orient("vertical")
+        .barlength(400)
+
+    colorbarObject = d3.select("#colorbar")
+                        .call(colorbar)
 
     parcoords = d3.parcoords()("#origin_data")
       .color(color)
@@ -498,8 +534,8 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
       .color(color)
       .alpha(0.4);
 
-    hide_header_for_parcoords = header_eigen.concat(["latency90", "id"]);
-    hide_header_for_eigen = header_raw.concat(["latency90", "id"]);
+    hide_header_for_parcoords = header_eigen.concat(["latency90", "id", "date"]);
+    hide_header_for_eigen = header_raw.concat(["latency90", "id", "date"]);
     if (header_eigen.indexOf('range')){
         hide_header_for_parcoords = hide_header_for_parcoords.concat(["range"]);
         }
