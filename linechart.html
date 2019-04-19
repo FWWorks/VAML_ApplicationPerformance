@@ -26,7 +26,6 @@
         stroke: black;
         shape-rendering: crispEdges;
     }
-
 .center {
    display: -webkit-flex;
    -webkit-justify-content: center;
@@ -52,6 +51,7 @@
 	}
 #colorbar{
     position:fixed;
+
 }
 </style>
 </head>
@@ -79,7 +79,8 @@
             <div id="scatter_plot" ></div>
     </div>
     <div id="div3">
-        <div id="colorbar">1</div>
+        <svg id="colorbar" width="100" height="500" style="font-size: 6px;"></svg>
+
     </div>
 </div>
 
@@ -475,20 +476,9 @@ $("#correlation_table").ready(function() {
 
 </script>
 
+<script> //draw colorbar
 
-<script id="brushing">
-header_raw = {{parallel_header|tojson}}["parallel_header"];
-header_eigen = {{eigen_header|tojson}}["eigen_header"];
-parallel_data = {{parallel_data|tojson}}["parallel_data"];
-
-create_parallel_plot(parallel_data, header_raw, header_eigen)
-
-function create_parallel_plot(parallel_data, header_raw, header_eigen){
-    gradient_color = d3.scale.linear()
-                        .domain([0.2, 0.55])
-                        .range(["grey", "green"])
-                        .interpolate(d3.interpolateLab)
-    function get_color_scale(range_x){
+function get_color_scale(range_x){
         var c_scale = ["steelblue", "brown"];
         switch(range_x){
             case "range1":
@@ -503,6 +493,39 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
                       }
         return c_scale;
          }
+
+
+function drawColorbar(range_x){
+    var colors_scale = get_color_scale(range_x)
+    fillings = d3.scale.linear()
+        .domain([0.2, 0.55])
+        .range(colors_scale)
+    var orientation = "vertical";
+    colorbar = Colorbar()
+            .origin([30,40])
+            .scale(fillings).barlength(200).thickness(15)
+            .orient(orientation)
+            .title("Hover to update the pointer")
+
+    pointer = d3.selectAll("#colorbar").call(colorbar);
+
+
+}
+
+</script>
+<script id="brushing">
+header_raw = {{parallel_header|tojson}}["parallel_header"];
+header_eigen = {{eigen_header|tojson}}["eigen_header"];
+parallel_data = {{parallel_data|tojson}}["parallel_data"];
+
+create_parallel_plot(parallel_data, header_raw, header_eigen)
+
+function create_parallel_plot(parallel_data, header_raw, header_eigen){
+    gradient_color = d3.scale.linear()
+                        .domain([0.2, 0.55])
+                        .range(["grey", "green"])
+                        .interpolate(d3.interpolateLab)
+
     function get_color(range_x){
         c_scale = get_color_scale(range_x);
         gradient_color = d3.scale.linear()
@@ -515,16 +538,7 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
         get_color(d['range']);
         return gradient_color(d['latency90']);};
 
-    myScale = d3.scale.linear().range(["red","white","blue"]).domain([0,4,8]);
 
-    colorbar = Colorbar()
-        .thickness(10)
-        .scale(myScale)
-        .orient("vertical")
-        .barlength(400)
-
-    colorbarObject = d3.select("#colorbar")
-                        .call(colorbar)
 
     parcoords = d3.parcoords()("#origin_data")
       .color(color)
@@ -533,6 +547,8 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
     eigenvector = d3.parcoords()("#eigenvector")
       .color(color)
       .alpha(0.4);
+
+    drawColorbar("all");
 
     hide_header_for_parcoords = header_eigen.concat(["latency90", "id", "date"]);
     hide_header_for_eigen = header_raw.concat(["latency90", "id", "date"]);
@@ -570,11 +586,16 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
 
 
     //add click outlier event
+    var is_clicked = false;
     d3.select("#origin_data svg")
         .on("click", function() {
             var mousePosition = d3.mouse(this);
             c_d = highlightLineOnClick(mousePosition, parcoords);
             if (c_d.length > 0){
+                is_clicked = true;
+                if (c_d.length == 1){
+                    pointer.pointTo(c_d[0]['latency90']);
+                }
                 eigenvector.highlight(c_d);
                 restyle_scatter_plot('scatter_plot', c_d, parallel_data);
                 update_linechart(c_d);
@@ -583,11 +604,28 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
             }
         })
         .on("dblclick", function(){
+            is_clicked = false;
             parcoords.unhighlight();
             eigenvector.unhighlight();
             init_scatter_plot();
             recover_linechart();
-
+          })
+        .on("mouseover", function() {
+            if (is_clicked == false){
+                var mouseOverPosition = d3.mouse(this);
+                var mouseover_c_d = highlightLineOnClick(mouseOverPosition, parcoords);
+                if (mouseover_c_d.length > 0){
+                    pointer.pointTo(mouseover_c_d[0]['latency90']);
+                    eigenvector.highlight(mouseover_c_d);
+                    restyle_scatter_plot('scatter_plot', mouseover_c_d, parallel_data);
+                    update_linechart(mouseover_c_d);
+                }else{
+                    parcoords.unhighlight();
+                    eigenvector.unhighlight();
+                    init_scatter_plot();
+                    recover_linechart();
+                }
+            }
           });
 
     d3.select("#eigenvector svg")
@@ -595,6 +633,10 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
             var mousePosition = d3.mouse(this);
             c_d_e = highlightLineOnClick(mousePosition, eigenvector);
             if (c_d_e.length > 0){
+                is_clicked = true;
+                if (c_d_e.length == 1){
+                        pointer.pointTo(c_d_e[0]['latency90']);
+                    }
                 parcoords.highlight(c_d_e);
                 restyle_scatter_plot('scatter_plot', c_d_e, parallel_data);
                 update_linechart(c_d_e);
@@ -603,11 +645,28 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
             }
         })
         .on("dblclick", function(){
+            is_clicked = false;
             eigenvector.unhighlight();
             parcoords.unhighlight();
             init_scatter_plot();
             recover_linechart();
-
+          })
+         .on("mouseover", function() {
+           if (is_clicked == false){
+               var mouseOverPosition = d3.mouse(this);
+               var mouseover_c_d = highlightLineOnClick(mouseOverPosition, parcoords);
+               if (mouseover_c_d.length > 0){
+                   pointer.pointTo(mouseover_c_d[0]['latency90']);
+                   eigenvector.highlight(mouseover_c_d);
+                   restyle_scatter_plot('scatter_plot', mouseover_c_d, parallel_data);
+                   update_linechart(mouseover_c_d);
+               }else{
+                   parcoords.unhighlight();
+                   eigenvector.unhighlight();
+                   init_scatter_plot();
+                   recover_linechart();
+               }
+           }
           });
 
     parcoords.on("brush", function(d) {
