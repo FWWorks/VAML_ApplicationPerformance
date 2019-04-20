@@ -85,10 +85,10 @@
 </div>
 
 <script>
-steelB_Brown = [
-                 [0, 'rgb(123,108,138)'], [0.35, 'rgb(124,111,140)'],
-                 [0.5, 'rgb(130,103,127)'], [0.6, 'rgb(143,113,134)'],
-                 [0.7, 'rgb(140,102,121)'], [1, 'rgb(145,90,104)']
+Purples = [
+                 [0, 'rgb(229, 203, 229)'], [0.35, 'rgb(195, 134, 195)'],
+                 [0.5, 'rgb(178, 99, 178)'], [0.6, 'rgb(154, 52, 154)'],
+                 [0.7, 'rgb(139, 22, 139)'], [1, 'rgb(130, 4, 130)']
                 ];
 projection_layout = {
               title: {
@@ -242,9 +242,13 @@ function line_chart_selection(){
             line_chart_layout_previous_status = layout_range_1;
             Plotly.relayout(linechart, layout_range_1);
             all_select_range = select_x_1;
+            drawColorbar("range1");
+            pointer = d3.selectAll("#colorbar").call(colorbar);
             //line_chart_layout_previous_status = all_select_range;
         }
        else if (range_index == 2){
+            drawColorbar("multiple");
+            pointer = d3.selectAll("#colorbar").call(colorbar);
             var select_x_1_index = [timeseries.indexOf(select_x_1[0]), timeseries.indexOf(select_x_1[1])];
             var select_x_2_index = [timeseries.indexOf(select_x_2[0]), timeseries.indexOf(select_x_2[1])];
             var tmp1 = [];
@@ -360,12 +364,15 @@ function update_linechart(c_d){
 function recover_linechart(){
     Plotly.newPlot('linechart', initial_line_chart_data, initial_line_chart_layout, {displayModeBar: false});
     line_chart_selection();
+    drawColorbar("all");
     //line_chart_layout_previous_status = [];
     //Plotly.newPlot('linechart', initial_line_chart_data, initial_line_chart_layout, {displayModeBar: false});
 }
 function recover_linechart2(){
     Plotly.newPlot('linechart', initial_line_chart_data, initial_line_chart_layout, {displayModeBar: false});
     line_chart_selection();
+    drawColorbar("all");
+    pointer = d3.selectAll("#colorbar").call(colorbar);
 }
 </script>
 
@@ -479,16 +486,19 @@ $("#correlation_table").ready(function() {
 <script> //draw colorbar
 
 function get_color_scale(range_x){
-        var c_scale = ["steelblue", "brown"];
+        var c_scale = ["white", "purple"];
         switch(range_x){
             case "range1":
-                c_scale = ["grey", "blue"];
+                c_scale = ["white", "blue"];
                 break;
             case "range2":
-                c_scale = ["grey", "red"];
+                c_scale = ["white", "red"];
                 break;
             case "common_range":
-                c_scale = ["grey", "green"];
+                c_scale = ["white", "green"];
+                break;
+            case "multiple":
+                c_scale = ["white", "grey"];
                 break;
                       }
         return c_scale;
@@ -498,17 +508,13 @@ function get_color_scale(range_x){
 function drawColorbar(range_x){
     var colors_scale = get_color_scale(range_x)
     fillings = d3.scale.linear()
-        .domain([0.2, 0.55])
+        .domain([0.1, 0.5])
         .range(colors_scale)
     var orientation = "vertical";
     colorbar = Colorbar()
             .origin([30,40])
             .scale(fillings).barlength(200).thickness(15)
             .orient(orientation)
-            .title("Hover to update the pointer")
-
-    pointer = d3.selectAll("#colorbar").call(colorbar);
-
 
 }
 
@@ -517,19 +523,20 @@ function drawColorbar(range_x){
 header_raw = {{parallel_header|tojson}}["parallel_header"];
 header_eigen = {{eigen_header|tojson}}["eigen_header"];
 parallel_data = {{parallel_data|tojson}}["parallel_data"];
-
-create_parallel_plot(parallel_data, header_raw, header_eigen)
+drawColorbar("all");
+pointer = d3.selectAll("#colorbar").call(colorbar);
+create_parallel_plot(parallel_data, header_raw, header_eigen);
 
 function create_parallel_plot(parallel_data, header_raw, header_eigen){
     gradient_color = d3.scale.linear()
-                        .domain([0.2, 0.55])
+                        .domain([0.1, 0.5])
                         .range(["grey", "green"])
                         .interpolate(d3.interpolateLab)
 
     function get_color(range_x){
         c_scale = get_color_scale(range_x);
         gradient_color = d3.scale.linear()
-                            .domain([0.2, 0.55])
+                            .domain([0.1, 0.5])
                             .range(c_scale)
                             .interpolate(d3.interpolateLab)
         return 0
@@ -548,7 +555,7 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
       .color(color)
       .alpha(0.4);
 
-    drawColorbar("all");
+
 
     hide_header_for_parcoords = header_eigen.concat(["latency90", "id", "date"]);
     hide_header_for_eigen = header_raw.concat(["latency90", "id", "date"]);
@@ -716,7 +723,7 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen){
         divide_data_range(raw_data)
         range_names = ["all", "range1", "range2", "common_range"];
         scatter_ranges = {"all":scatter_range_all, "range1": scatter_range_1, "range2": scatter_range_2, "common_range": scatter_range_common};
-        scatter_colorscale = {"all":steelB_Brown, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
+        scatter_colorscale = {"all":Purples, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
         scatter_traces = [];
         color_value_all = {};
         for (var i=0; i<range_names.length; i++){
@@ -836,7 +843,7 @@ function divide_data_range(raw_data){
         divide_data_range(raw_data);
         range_names = ["all", "range1", "range2", "common_range"];
         scatter_ranges = {"all":scatter_range_all, "range1": scatter_range_1, "range2": scatter_range_2, "common_range": scatter_range_common};
-        scatter_colorscale = {"all":steelB_Brown, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
+        scatter_colorscale = {"all":Purples, "range1": 'Blues', "range2": 'Reds', "common_range": 'Greens'};
         scatter_traces = [];
         for (var i=0; i<range_names.length; i++){
             var scatter_range_data = scatter_ranges[range_names[i]];
