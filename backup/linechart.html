@@ -166,6 +166,7 @@ function changeColor(){
         }
     }
 }
+
 </script>
 <script>
 //redraw_parallel_div
@@ -188,6 +189,29 @@ function update_parallel_div(){
 
 }
 </script>
+
+<script>
+//redraw_parallel_div
+function update_parallel_div(){
+    parallel_parent1 = document.getElementById("origin_data").parentNode;
+    parallel_parent1.removeChild(document.getElementById("origin_data"));
+    oDiv_1=document.createElement('div');
+    oDiv_1.setAttribute("id", "origin_data");
+    oDiv_1.setAttribute("class", "parcoords");
+    oDiv_1.setAttribute("style", "height:200px;");
+    parallel_parent1.appendChild(oDiv_1);
+
+    parallel_parent2 = document.getElementById("eigenvector").parentNode;
+    parallel_parent2.removeChild(document.getElementById("eigenvector"));
+    oDiv_2=document.createElement('div');
+    oDiv_2.setAttribute("id", "eigenvector");
+    oDiv_2.setAttribute("class", "parcoords");
+    oDiv_2.setAttribute("style", "height:200px;");
+    parallel_parent2.appendChild(oDiv_2);
+
+}
+</script>
+
 <script type="text/javascript">
       function do_ajax2() {
         var req = new XMLHttpRequest();
@@ -220,12 +244,30 @@ function update_parallel_div(){
             scatter_parent.appendChild(oDiv_3);
 
             create_parallel_plot(new_parallel_data, new_parallel_header, new_eigen_header, default_color_attribute)
+            //update barchart
+
+            new_barchart_data = JSON.parse(this.responseText)["new_barchart_data"];
+            div4_parent = document.getElementById("div4").parentNode;
+            div4_parent.removeChild(document.getElementById("div4"));
+            oDiv_4=document.createElement('div');
+            oDiv_4.setAttribute("id", "div4");
+            div4_parent.appendChild(oDiv_4);
+            div4 = document.getElementById("div4");
+            oDiv_pc1=document.createElement('div');
+            oDiv_pc1.setAttribute("id", "pc1");
+            div4.appendChild(oDiv_pc1);
+            oDiv_pc2=document.createElement('div');
+            oDiv_pc2.setAttribute("id", "pc2");
+            div4.appendChild(oDiv_pc2);
+            redrawBarcharts();
+
 
           } else {
             //result.innerHTML = "...";
           }
         }
-        req.open('POST', '/linechart', true);
+
+        req.open('POST', '/' + application_name, true);
         req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
         req_time_range = {"range1": select_x_1, "range2": select_x_2, "common_range": common_x, "all_select_range": all_select_range};
         req.send("time=" + JSON.stringify(req_time_range));
@@ -236,10 +278,17 @@ function update_parallel_div(){
 
 <script>
 //line chart
-var application_name = {{application_name|tojson}};
+application_name = {{application_name|tojson}};
 timeseries = {{timeseries|tojson}}["timeseries"];
 line_chart_layout_previous_status = [];
 line_chart_data_previous_status = [];
+if (application_name == 'pmd'){
+    latency_domain = [0.1, 0.5];
+}
+if (application_name == 'blackscholes'){
+    latency_domain = [0.0, 0.1];
+}
+time_domain = [0, timeseries.length];
 const initial_line_chart_data = [{
                 mode: 'lines',
                 x: {{timeseries|tojson}}["timeseries"],
@@ -567,9 +616,9 @@ function get_color_scale(range_x){
 function drawColorbar(range_x){
     var colors_scale = get_color_scale(range_x)
     if (now_color_attribute == 'latency90'){
-        var domain_range = [0.1, 0.5];
+        var domain_range = latency_domain;
     }else{
-        var domain_range = [0, 360];
+        var domain_range = time_domain;
     }
     fillings = d3.scale.linear()
         .domain(domain_range)
@@ -593,9 +642,9 @@ create_parallel_plot(parallel_data, header_raw, header_eigen, default_color_attr
 
 function create_parallel_plot(parallel_data, header_raw, header_eigen, colorattribute){
      if (colorattribute == 'latency90'){
-            var domain_range = [0.1, 0.5];
+            var domain_range = latency_domain;
         }else{
-            var domain_range = [0, 360];
+            var domain_range = time_domain;
         }
     gradient_color = d3.scale.linear()
                         .domain(domain_range)
@@ -605,9 +654,9 @@ function create_parallel_plot(parallel_data, header_raw, header_eigen, colorattr
     function get_color(range_x){
         c_scale = get_color_scale(range_x);
         if (colorattribute == 'latency90'){
-            var domain_range = [0.1, 0.5];
+            var domain_range = latency_domain;
         }else{
-            var domain_range = [0, 360];
+            var domain_range = time_domain;
         }
         gradient_color = d3.scale.linear()
                             .domain(domain_range)
@@ -1075,12 +1124,15 @@ barchart_data_all_time = {{barchart_data|tojson}}["barchart_data"];
 
 function get_barchart_layout(plot_name){
     var barchart_layout = {
+         barmode: 'group',
          autosize: true,
          height: 350,
-         showlegend: false,
-         title: plot_name,
+         showlegend: true,
+         legend: {"orientation": "h"},
+         title: plot_name + ' components view',
          margin: {
-            t:30
+            t:30,
+            r: 10
             },
          xaxis: {
              autorange: false,
@@ -1095,33 +1147,56 @@ function get_barchart_layout(plot_name){
          };
      return barchart_layout
      }
+
+barchart_color = {"range1": 'rgb(105, 187, 199)', "range2": 'rgb(255, 115, 115)',
+                "common_range": 'rgb(139, 170, 136)', "all_selected": 'rgb(207, 78, 235)',
+                "full dataset": 'rgb(31, 119, 180)'
+                     };
+
 function get_barchart_trace(b_header, b_component, plot_name){
     var b_t = {
       x: b_component,
       y: b_header,
+      marker:{
+        color: barchart_color[plot_name]
+      },
       name: plot_name,
       orientation: 'h',
-      width: 0.5,
       type: 'bar'
             };
     return b_t
     }
+
 barchart_all_time_pc1_trace = get_barchart_trace(barchart_header, barchart_data_all_time[0], 'full dataset');
 barchart_all_time_pc2_trace = get_barchart_trace(barchart_header, barchart_data_all_time[1], 'full dataset');
 barchart_all_time_pc1_layout = get_barchart_layout('PC1');
 barchart_all_time_pc2_layout = get_barchart_layout('PC2');
 
 function initBarcharts(){
-
     Plotly.plot('pc1', [barchart_all_time_pc1_trace], barchart_all_time_pc1_layout, {displayModeBar: false});
-
     Plotly.plot('pc2', [barchart_all_time_pc2_trace], barchart_all_time_pc2_layout, {displayModeBar: false});
-
 }
 
 function redrawBarcharts(){
+    console.log(new_barchart_data);
+    if (Object.keys(new_barchart_data).length == 1 && new_barchart_data.hasOwnProperty("all_selected")==true){
+        initBarcharts();
+        return 0
+    }
+    barchart_all_traces_pc1 = [barchart_all_time_pc1_trace];
+    barchart_all_traces_pc2 = [barchart_all_time_pc2_trace];
+    traces_names = ["all_selected", "range1", "range2", "common_range"];
+    for (var i=0; i<traces_names.length; i++){
+        if (new_barchart_data.hasOwnProperty(traces_names[i])){
+            barchart_all_traces_pc1.push(get_barchart_trace(barchart_header, new_barchart_data[traces_names[i]][0], traces_names[i]));
+            barchart_all_traces_pc2.push(get_barchart_trace(barchart_header, new_barchart_data[traces_names[i]][1], traces_names[i]));
+            }
+        }
+    Plotly.newPlot('pc1', barchart_all_traces_pc1, barchart_all_time_pc1_layout, {displayModeBar: false});
+    Plotly.newPlot('pc2', barchart_all_traces_pc2, barchart_all_time_pc2_layout, {displayModeBar: false});
+    return 0
+    }
 
-}
 initBarcharts();
 </script>
 </body>

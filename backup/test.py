@@ -7,42 +7,49 @@ np.set_printoptions(suppress=True)
 import json
 app = Flask(__name__)
 
-@app.route("/linechart", methods=['GET', 'POST'])
-def linechart():
+@app.route("/pmd", methods=['GET', 'POST'])
+def pmd():
     application_name = "pmd"
+    return get_application_performance(application_name)
+
+@app.route("/blackscholes", methods=['GET', 'POST'])
+def blackscholes():
+    application_name = "blackscholes"
+    return get_application_performance(application_name)
+
+def get_application_performance(application_name):
     data = pd.read_csv(application_name + ".csv")
     latency_90 = list(data["latency90"])
     latency_90 = [round(i, 2) for i in latency_90]
     timeseries = list(data["date"])
     timeseries = [i.split(" ")[1].split(".")[0] for i in timeseries]
-    header = ["BW","MEM_BW","switch","cpu","io","memory","network"]
+    header = ["BW", "MEM_BW", "switch", "cpu", "io", "memory", "network"]
     header2 = ["id"] + header
     date = "3/28/2019 "
     if request.method == "POST":
         rec_time_all = json.loads(request.form["time"])
         data = get_range_data(rec_time_all, date, data)
         new_bar_chart = get_pca_components_range(data, header, application_name)
-        print (new_bar_chart)
         new_m = get_correlation_table(application_name, header, data)
         new_parallel_data, ratio_header, new_components = get_parallel_json_data(data, header, application_name)
-        print (new_parallel_data)
 
         respon_mess = {"new_correlation_matrix": new_m, "new_parallel_data": new_parallel_data, "new_header": header2,
                        "new_parallel_header": header, "new_eigen_header": ratio_header, "new_barchart_header": header,
-                       "new_barchart_data": new_components}
+                       "new_barchart_data": new_bar_chart}
         return json.dumps(respon_mess)
-    
+
     raw_data = data
     matrix_json = get_correlation_table(application_name, header, raw_data)
     parallel_data, ratio_header, components = get_parallel_json_data(raw_data, header, application_name)
-    return render_template("linechart.html", latency_90={"latency_90": latency_90}, timeseries={"timeseries": timeseries},
-                           application_name=application_name,#line chart
+    return render_template("linechart.html", latency_90={"latency_90": latency_90},
+                           timeseries={"timeseries": timeseries},
+                           application_name=application_name,  # line chart
                            correlation_matrix={"correlation_matrix": matrix_json},
-                           correlation_header={"correlation_header": header2},#correlation table
+                           correlation_header={"correlation_header": header2},  # correlation table
                            parallel_data=parallel_data,
-                           parallel_header={"parallel_header": header},#parallel coordinator
+                           parallel_header={"parallel_header": header},  # parallel coordinator
                            eigen_header={"eigen_header": ratio_header},
-                           barchart_header={"barchart_header": header}, #barchart
+                           barchart_header={"barchart_header": header},  # barchart
                            barchart_data={"barchart_data": components}
                            )
 
