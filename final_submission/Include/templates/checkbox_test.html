@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+    <input type="checkbox" id="cbCheckbox1" value="1" />
+    <input type="checkbox" value="2" />
+    <input type="checkbox" disabled="disabled" value="3" />
+    <input type="checkbox" value="4" />
+    <input type="checkbox" disabled="true" value="5" />
+    <br />
+    <input type="button" id="btnDisabled" value="disable" onclick="fn_disabled();" />
+    <input type="button" id="Button1" value="enable" onclick="fn_enable();" /><br />
+    <input type="button" id="Button2" value="getchosenvalue" onclick="getCheckedValues();" /><br />
+    <input type="button" id="Button3" value="choose second" onclick="checkedSecond();" />
+    <input type="button" id="Button4" value="cancel second" onclick="uncheckedSecond();" /><br />
+</body>
+</html>
+<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    function fn_disabled() {
+        //$("input[type='checkbox']").attr("disabled", "disabled");
+        //$("input[type='checkbox']").attr("disabled", true);
+        $("input[type='checkbox']").prop("disabled", true);
+        //  $("input[type='checkbox']").prop("disabled", "disabled");
+    }
+
+    function fn_enable() {
+        //  $("input[type='checkbox']").removeAttr("disabled");
+        // $("input[type='checkbox']").attr("disabled", false);
+        // $("input[type='checkbox']").prop("disabled","");
+        $("input[type='checkbox']").prop("disabled", false);
+    }
+
+
+    function getCheckedValues() {
+        var arr = [];
+        $("input[type='checkbox']:checked").each(function (index, item) {//
+            arr.push($(this).val());
+        });
+        alert(arr);
+    }
+
+    function checkedSecond() {
+        // $("input[type='checkbox']:eq(1)").prop("checked", "checked");
+        $("input[type='checkbox']:eq(1)").prop("checked", true);
+    }
+
+    function uncheckedSecond() {
+        //  $("input[type='checkbox']:eq(1)").prop("checked", "");
+        $("input[type='checkbox']:eq(1)").prop("checked", false);
+    }
+
+    $("#cbCheckbox1").click(function () {
+        if ($(this).prop("checked")) {/
+            alert("chosen");
+        } else {
+            alert("not chosen");
+        }
+    });
+
+</script>

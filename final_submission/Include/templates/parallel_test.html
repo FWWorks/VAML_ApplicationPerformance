@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
+    <link rel="stylesheet" type="text/css" href="https://syntagmatic.github.io/parallel-coordinates/examples/style.css">
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.2.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="d3.parcoords.js"></script>
+</head>
+<body>
+        <div id="origin_data" class="parcoords" style="height:200px;"></div>
+        <div id="eigenvector" class="parcoords" style="height:200px;"></div>
+        <div id="grid"></div>
+
+<script id="brushing">// quantitative color scale
+$("document").ready(function() {
+var blue_to_brown = d3.scale.linear()
+  .domain([9, 50])
+  .range(["steelblue", "brown"])
+  .interpolate(d3.interpolateLab);
+
+var color = function(d) { return blue_to_brown(d['client']); };
+var original_ignore = ["name", "time", "background", "99.60%","0.30%","0.05%","0.03%","0.02%"];
+var parcoords = d3.parcoords()("#origin_data")
+  .color(color)
+  .alpha(0.4);
+
+var eigenvector = d3.parcoords()("#eigenvector")
+  .color(color)
+  .alpha(0.4);
+
+// load csv file and create the chart
+var url = 'https://raw.githubusercontent.com/FWWorks/VAML_ApplicationPerformance/master/iteration2_code/iter2/venv/Include/projection_';
+	var name = "hmmer";
+	console.log(name);
+	name = name;
+	url = url + name + '.csv'
+
+d3.csv(url, function(data) {
+  parcoords
+    .data(data)
+    .hideAxis(original_ignore)
+    .render()
+    .brushMode("1D-axes");  // enable brushing
+
+eigenvector
+    .data(data)
+    .hideAxis(["name", "time", "background", "CPI", 'BW','L3_BW','L2_BW','MEM_BW','latency90','client'])
+    .dimensions(dimensions)
+    .autoscale()
+    .commonScale()
+    .render()
+
+    .brushMode("1D-axes");  // enable brushing
+console.log(data);
+  // create data table, row hover highlighting
+  var grid = d3.divgrid();
+  d3.select("#grid")
+    .datum(data.slice(0,5))
+    .call(grid)
+    .selectAll(".row")
+    .on({
+      "mouseover": function(d) { parcoords.highlight([d]);
+		},
+      "mouseout": parcoords.unhighlight
+
+    });
+
+  // update data table on brush event
+  parcoords.on("brush", function(d) {
+	  //alert(JSON.stringify(d));
+	  eigenvector.highlight(d);
+    d3.select("#grid")
+      .datum(d.slice(0,d.length))
+      .call(grid)
+      .selectAll(".row")
+      .on({
+        "mouseover": function(d) {
+
+			parcoords.highlight([d])
+								 },
+        "mouseout": parcoords.unhighlight
+      });
+  }	);
+
+
+	 eigenvector.on("brush", function(d) {
+
+			 parcoords.highlight(d);
+
+
+  }	);
+
+
+});
+});
+</script>
+
+</body>
+</html>

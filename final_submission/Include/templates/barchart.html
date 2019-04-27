@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<div id="plotly-div"></div>
+
+<script>
+trace1 = {
+  x: [2112, 1005, 703, 620, 482, 420, 346, 306, 293, 231, 229, 176, 158, 142, 79, 65, 53, 27, 22, 20, 16, 14],
+  y: ['Laravel', 'Symfony2', 'Nette', 'Yii 2', 'CodeIgniter', 'PHPixie', 'Zend Framework 2', 'No Framework', 'Yii 1', 'Phalcon', 'CakePHP', 'I use a CMS for all my work', 'Slim', 'Silex', 'Zend Framework 1', 'Company Internal Framework', 'Simple MVC Framework', 'FuelPHP', 'Kohana', 'Typo 3', 'TYPO3 Flow', 'We use a CMS for everything'],
+  name: 'Votes',
+  orientation: 'h',
+  type: 'bar'
+};
+trace2 = {
+  x: [-2112, 1005, 703, 620, -482, 420, 346, 306, -293, 231, 229, 176, 158, 142, 79, 65, 53, 27, 22, 20, 16, 14],
+  y: ['Laravel', 'Symfony2', 'Nette', 'Yii 2', 'CodeIgniter', 'PHPixie', 'Zend Framework 2', 'No Framework', 'Yii 1', 'Phalcon', 'CakePHP', 'I use a CMS for all my work', 'Slim', 'Silex', 'Zend Framework 1', 'Company Internal Framework', 'Simple MVC Framework', 'FuelPHP', 'Kohana', 'Typo 3', 'TYPO3 Flow', 'We use a CMS for everything'],
+  name: '2',
+  orientation: 'h',
+  type: 'bar'
+};
+data = [trace1, trace2];
+layout = {
+  autosize: true,
+  height: 702,
+  margin: {
+  t: 30,
+    l: 210,
+    pad: 4
+  },
+  showlegend: false,
+  title: 'PHP Framework Popularity in Personal Projects - SitePoint, 2015',
+  width: 1150,
+  xaxis: {
+    autorange: true,
+    range: [0, 2223.157894736842],
+    title: 'Votes',
+    type: 'linear'
+  },
+  yaxis: {
+    autorange: true,
+    range: [-0.5, 21.5],
+    title: 'Framework',
+    type: 'category'
+  }
+};
+Plotly.plot('plotly-div', {
+  data: data,
+  layout: layout
+});
+</script>
+</body>
+</html>
