@@ -34,5 +34,6 @@ Tips
 5 - Drag to select the time period on line chart, click to cancel it.  
 
 
-Interactions 
+Interactions   
+
 Detailed interactions and documentations can be found in 'ProjectReport_VAML.pdf' under the same folder as this 'README.md' file
