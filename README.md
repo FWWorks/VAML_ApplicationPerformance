@@ -1,5 +1,5 @@
 # VAML_ApplicationPerformance
-Course project for VAML. Focus on visualization of application performance.
+Course project for VAML. Focus on visualizations of application performance.
 
 Requirement
 1 - use Chrome
@@ -21,3 +21,4 @@ Tips
 4 - If you find the selection in line chart(Performance view) goes wrong, double click on PCPs to make it recover because you are highly possible trigger the hover event on PCPs. 
 
 Interactions 
+Detailed interactions and documentations can be found in 'ProjectReport_VAML.pdf' under the same folder as this 'README.md' file
