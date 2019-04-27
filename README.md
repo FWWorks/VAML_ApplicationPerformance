@@ -7,12 +7,11 @@ Requirement
 3 - make sure your localhost:5000 port isn't occupied by other applications
 
 How to run
-1 - get into final_submission directory
-2 - get into Include directory
+1 - get into 'final_submission' directory
+2 - get into 'Include' directory
 3 - execute 'python test.py' under that directory
 4 - open 'Chrome' browser
-5.a - type in '127.0.0.1:5000/pmd' in address to view performance analysis for 'pmd' application
-5.b - type in '127.0.0.1:5000/blackscholes' in address to view performance analysis for 'blackscholes' application
+5 - type in '127.0.0.1:5000/pmd' in address to view performance analysis for 'pmd' application
 
 Tips
 1 - Selecting time periods in line chart(Performance view) takes time to update other views.
