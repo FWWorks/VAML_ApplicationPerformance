@@ -21,7 +21,8 @@ How to run
 
 5 - type in '127.0.0.1:5000/pmd' in address to view performance analysis for 'pmd' application
 
-Tips
+Tips  
+
 1 - Selecting time periods in line chart(Performance view) takes time to update other views.  
 
 2 - If you hover on parallel coordinates views or click on data items in them, you need to double click on PCPs to recover prior to your interactions with other plots. Because I set a block on it to make viewing other plots in down page easier.  
